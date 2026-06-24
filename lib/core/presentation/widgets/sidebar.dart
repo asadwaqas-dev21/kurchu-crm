@@ -1,0 +1,261 @@
+import 'package:iconsax/iconsax.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
+
+class Sidebar extends StatelessWidget {
+  const Sidebar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 260,
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        border: Border(right: BorderSide(color: AppColors.border)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Logo Area
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Row(
+              children: [
+                const Icon(Iconsax.send_1, color: AppColors.primary, size: 28),
+                const SizedBox(width: 8),
+                Text(
+                  'Kurchu CRM',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionHeader('OVERVIEW'),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.category,
+                    label: 'Dashboard',
+                    isActive: GoRouterState.of(context).uri.toString() == '/',
+                    onTap: () => context.go('/'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.profile_2user,
+                    label: 'My Leads',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/my-leads'),
+                    onTap: () => context.go('/my-leads'),
+                  ),
+
+                  const SizedBox(height: 24),
+                  _buildSectionHeader('SALES'),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.profile_2user,
+                    label: 'Leads',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/leads'),
+                    onTap: () => context.go('/leads'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.kanban,
+                    label: 'Pipeline',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/pipeline'),
+                    onTap: () => context.go('/pipeline'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.call_calling,
+                    label: 'Follow-ups',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/follow-ups'),
+                    onTap: () => context.go('/follow-ups'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.book,
+                    label: 'Bookings',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/bookings'),
+                    onTap: () => context.go('/bookings'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.map,
+                    label: 'Itineraries',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/itineraries'),
+                    onTap: () => context.go('/itineraries'),
+                  ),
+
+                  const SizedBox(height: 24),
+                  _buildSectionHeader('FINANCE & DOCS'),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.wallet_2,
+                    label: 'Finance',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/finance'),
+                    onTap: () => context.go('/finance'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.receipt,
+                    label: 'Invoices',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/invoices'),
+                    onTap: () => context.go('/invoices'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Iconsax.document_text,
+                    label: 'Documents',
+                    isActive: GoRouterState.of(
+                      context,
+                    ).uri.toString().startsWith('/documents'),
+                    onTap: () => context.go('/documents'),
+                  ),
+
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ),
+
+          // Bottom Area
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                _buildNavItem(
+                  context,
+                  icon: Iconsax.setting_2,
+                  label: 'Settings',
+                  isActive: GoRouterState.of(
+                    context,
+                  ).uri.toString().startsWith('/settings'),
+                  onTap: () => context.go('/settings'),
+                ),
+                _buildNavItem(
+                  context,
+                  icon: Iconsax.logout,
+                  label: 'Log out',
+                  onTap: () {},
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: AppColors.primary,
+                      radius: 18,
+                      child: const Text(
+                        'AM',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Asad Waqas',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary,
+                                ),
+                          ),
+                          Text(
+                            'asadwaqas.dev@gmail.com',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: AppColors.textSecondary),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, bottom: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    bool isActive = false,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: isActive ? AppColors.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: isActive ? Colors.white : AppColors.textSecondary,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : AppColors.textPrimary,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
