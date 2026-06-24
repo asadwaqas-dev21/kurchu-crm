@@ -14,18 +14,6 @@ void main() async {
   final authService = getIt<AuthService>();
   await authService.initialize();
 
-  if (!authService.isLoggedIn()) {
-    print('🔑 User not logged in, attempting auto-login...');
-    // Auto-login with seeded admin credentials
-    final success = await authService.login(
-      'admin@kurchucrm.com',
-      'Admin@123!',
-    );
-    print(success ? '✅ Auto-login SUCCESS!' : '❌ Auto-login FAILED!');
-  } else {
-    print('🔓 User already logged in!');
-  }
-
   runApp(const MyApp());
 }
 

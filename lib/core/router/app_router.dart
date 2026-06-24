@@ -13,12 +13,29 @@ import 'package:crm_kurchudashboard/features/itineraries/presentation/pages/itin
 import 'package:crm_kurchudashboard/features/documents/presentation/pages/documents_page.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/pages/my_leads_page.dart';
 import 'package:crm_kurchudashboard/features/settings/presentation/pages/settings_page.dart';
-
+import 'package:crm_kurchudashboard/core/services/auth_service.dart';
+import 'package:crm_kurchudashboard/features/auth/presentation/pages/login_page.dart';
 import 'package:crm_kurchudashboard/core/presentation/layouts/main_layout.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
+  redirect: (context, state) {
+    final isLoggedIn = getIt<AuthService>().isLoggedIn();
+    final isGoingToLogin = state.uri.toString() == '/login';
+
+    if (!isLoggedIn && !isGoingToLogin) {
+      return '/login';
+    }
+    if (isLoggedIn && isGoingToLogin) {
+      return '/';
+    }
+    return null;
+  },
   routes: [
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginPage(),
+    ),
     ShellRoute(
       builder: (context, state, child) => BlocProvider(
         create: (context) => getIt<DashboardBloc>(),

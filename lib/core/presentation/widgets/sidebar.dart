@@ -165,7 +165,12 @@ class Sidebar extends StatelessWidget {
                   context,
                   icon: Iconsax.logout,
                   label: 'Log out',
-                  onTap: () {},
+                  onTap: () async {
+                    await getIt<AuthService>().logout();
+                    if (context.mounted) {
+                      context.go('/login');
+                    }
+                  },
                 ),
                 const SizedBox(height: 16),
                 Builder(
