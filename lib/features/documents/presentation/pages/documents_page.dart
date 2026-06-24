@@ -127,7 +127,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
+      return  Scaffold(
         backgroundColor: AppColors.background,
         body: Center(child: CircularProgressIndicator()),
       );
@@ -137,7 +137,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
       return Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: Text('Error loading documents: $_error', style: const TextStyle(color: AppColors.error)),
+          child: Text('Error loading documents: $_error', style:  TextStyle(color: AppColors.error)),
         ),
       );
     }
@@ -163,7 +163,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                     Text(
                       'Manage all uploaded files and customer attachments.',
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
@@ -196,7 +196,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
                 border: Border.all(color: AppColors.border),
               ),
               child: _documents.isEmpty
-                  ? const Padding(
+                  ?  Padding(
                       padding: EdgeInsets.all(48.0),
                       child: Center(
                         child: Text(
@@ -209,7 +209,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _documents.length,
-                      separatorBuilder: (context, index) => const Divider(color: AppColors.border, height: 1),
+                      separatorBuilder: (context, index) =>  Divider(color: AppColors.border, height: 1),
                       itemBuilder: (context, index) {
                         final document = _documents[index];
                         return ListTile(
@@ -226,21 +226,21 @@ class _DocumentsPageState extends State<DocumentsPage> {
                           ),
                           title: Text(
                             document.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                            style:  TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                           ),
                           subtitle: Text(
                             document.size,
-                            style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                            style:  TextStyle(color: AppColors.textSecondary, fontSize: 12),
                           ),
                           trailing: PopupMenuButton<String>(
-                            icon: const Icon(Iconsax.more, color: AppColors.textSecondary),
+                            icon:  Icon(Iconsax.more, color: AppColors.textSecondary),
                             onSelected: (val) {
                               if (val == 'delete') {
                                 _deleteDocument(document.id);
                               }
                             },
                             itemBuilder: (context) => [
-                              const PopupMenuItem(
+                               PopupMenuItem(
                                 value: 'delete',
                                 child: Text('Delete', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold)),
                               ),
@@ -284,7 +284,7 @@ class _AddDocumentDialogState extends State<AddDocumentDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: AppColors.surface,
-      title: const Text('Upload Document', style: TextStyle(color: AppColors.textPrimary)),
+      title:  Text('Upload Document', style: TextStyle(color: AppColors.textPrimary)),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -295,13 +295,13 @@ class _AddDocumentDialogState extends State<AddDocumentDialog> {
               // Name
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Document Name',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                   hintText: 'e.g. Manali_Brochure.pdf',
                 ),
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 validator: (val) => val == null || val.isEmpty ? 'Please enter a name' : null,
               ),
               const SizedBox(height: 16),
@@ -309,22 +309,22 @@ class _AddDocumentDialogState extends State<AddDocumentDialog> {
               // File Size
               TextFormField(
                 controller: _sizeController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'File Size',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 validator: (val) => val == null || val.isEmpty ? 'Please enter a size' : null,
               ),
               const SizedBox(height: 16),
 
               // Type Selector
-              const Text('Document Type', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+               Text('Document Type', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 dropdownColor: AppColors.surface,
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 value: _selectedType,
                 items: const [
                   DropdownMenuItem(value: 'PDF', child: Text('PDF Document')),
@@ -349,12 +349,12 @@ class _AddDocumentDialogState extends State<AddDocumentDialog> {
               // URL Path
               TextFormField(
                 controller: _urlController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'File URL / Path',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 validator: (val) {
                   if (val == null || val.isEmpty) return 'Please enter a URL';
                   if (!val.startsWith('http://') && !val.startsWith('https://')) {
@@ -370,7 +370,7 @@ class _AddDocumentDialogState extends State<AddDocumentDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          child:  Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.iconPurple),

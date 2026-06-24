@@ -6,7 +6,7 @@ class AppTheme {
     return ThemeData(
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.background,
-      appBarTheme: const AppBarTheme(
+      appBarTheme:  AppBarTheme(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
@@ -16,7 +16,7 @@ class AppTheme {
   static ThemeData get dark {
     return ThemeData.dark().copyWith(
       primaryColor: AppColors.primary,
-      appBarTheme: const AppBarTheme(
+      appBarTheme:  AppBarTheme(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),

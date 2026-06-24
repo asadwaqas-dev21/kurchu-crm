@@ -20,14 +20,14 @@ final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     ShellRoute(
-      builder: (context, state, child) => MainLayout(child: child),
+      builder: (context, state, child) => BlocProvider(
+        create: (context) => getIt<DashboardBloc>(),
+        child: MainLayout(child: child),
+      ),
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => BlocProvider(
-            create: (context) => getIt<DashboardBloc>(),
-            child: const DashboardPage(),
-          ),
+          builder: (context, state) => const DashboardPage(),
         ),
         GoRoute(
           path: '/my-leads',

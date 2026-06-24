@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF1E1E1E); // Almost black for primary buttons/text
-  static const Color secondary = Color(0xFF6B7280); // Gray text
-  static const Color success = Color(0xFF10B981); // Green for profit/collected
-  static const Color warning = Color(0xFFF59E0B); // Orange/yellow for alerts
-  static const Color error = Color(0xFFE11D48); // Pink/Red for balance
+  static final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(ThemeMode.light);
+
+  static bool get isDarkMode => themeModeNotifier.value == ThemeMode.dark;
+
+  static Color get primary => isDarkMode ? const Color(0xFFA855F7) : const Color(0xFF1E1E1E);
+  static Color get secondary => const Color(0xFF6B7280);
+  static Color get success => const Color(0xFF10B981);
+  static Color get warning => const Color(0xFFF59E0B);
+  static Color get error => const Color(0xFFE11D48);
   
-  static const Color background = Color(0xFFFAFAFA); // Light gray background
-  static const Color surface = Color(0xFFFFFFFF); // White for cards
+  static Color get background => isDarkMode ? const Color(0xFF0F172A) : const Color(0xFFFAFAFA);
+  static Color get surface => isDarkMode ? const Color(0xFF1E293B) : const Color(0xFFFFFFFF);
   
-  static const Color textPrimary = Color(0xFF111827);
-  static const Color textSecondary = Color(0xFF6B7280);
+  static Color get textPrimary => isDarkMode ? const Color(0xFFF8FAFC) : const Color(0xFF111827);
+  static Color get textSecondary => isDarkMode ? const Color(0xFF94A3B8) : const Color(0xFF6B7280);
   
-  static const Color border = Color(0xFFE5E7EB); // Subtle borders
+  static Color get border => isDarkMode ? const Color(0xFF334155) : const Color(0xFFE5E7EB);
   
   // Icon background tints
-  static const Color iconBgBlue = Color(0xFFEFF6FF);
-  static const Color iconBlue = Color(0xFF3B82F6);
+  static Color get iconBgBlue => isDarkMode ? const Color(0xFF1E293B) : const Color(0xFFEFF6FF);
+  static Color get iconBlue => const Color(0xFF3B82F6);
   
-  static const Color iconBgPurple = Color(0xFFF3E8FF);
-  static const Color iconPurple = Color(0xFFA855F7);
+  static Color get iconBgPurple => isDarkMode ? const Color(0xFF2E1065) : const Color(0xFFF3E8FF);
+  static Color get iconPurple => const Color(0xFFA855F7);
   
-  static const Color iconBgGreen = Color(0xFFECFDF5);
-  static const Color iconGreen = Color(0xFF10B981);
+  static Color get iconBgGreen => isDarkMode ? const Color(0xFF064E3B) : const Color(0xFFECFDF5);
+  static Color get iconGreen => const Color(0xFF10B981);
   
-  static const Color iconBgOrange = Color(0xFFFFFBEB);
-  static const Color iconOrange = Color(0xFFF59E0B);
+  static Color get iconBgOrange => isDarkMode ? const Color(0xFF78350F) : const Color(0xFFFFFBEB);
+  static Color get iconOrange => const Color(0xFFF59E0B);
 }

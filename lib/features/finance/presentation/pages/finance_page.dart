@@ -104,7 +104,7 @@ class _FinancePageState extends State<FinancePage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
+      return  Scaffold(
         backgroundColor: AppColors.background,
         body: Center(child: CircularProgressIndicator()),
       );
@@ -114,7 +114,7 @@ class _FinancePageState extends State<FinancePage> {
       return Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: Text('Error loading finance data: $_error', style: const TextStyle(color: AppColors.error)),
+          child: Text('Error loading finance data: $_error', style:  TextStyle(color: AppColors.error)),
         ),
       );
     }
@@ -134,7 +134,7 @@ class _FinancePageState extends State<FinancePage> {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+             Text(
               'Track all your financial transactions.',
               style: TextStyle(color: AppColors.textSecondary),
             ),
@@ -229,7 +229,7 @@ class _FinancePageState extends State<FinancePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Collection Trend', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary)),
+           Text('Collection Trend', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary)),
           Expanded(
             child: _buildCollectionTrendChart(),
           ),
@@ -250,14 +250,14 @@ class _FinancePageState extends State<FinancePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Due Payments', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary)),
+           Text('Due Payments', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary)),
           const SizedBox(height: 16),
           Expanded(
             child: _duePayments.isEmpty
-                ? const Center(child: Text('No due payments.', style: TextStyle(color: AppColors.textSecondary)))
+                ?  Center(child: Text('No due payments.', style: TextStyle(color: AppColors.textSecondary)))
                 : ListView.separated(
                     itemCount: _duePayments.length,
-                    separatorBuilder: (context, index) => const Divider(color: AppColors.border, height: 16),
+                    separatorBuilder: (context, index) =>  Divider(color: AppColors.border, height: 16),
                     itemBuilder: (context, index) {
                       final item = _duePayments[index];
                       return _buildDuePaymentItem(item['name'], item['amount']);
@@ -271,7 +271,7 @@ class _FinancePageState extends State<FinancePage> {
 
   Widget _buildCollectionTrendChart() {
     if (_chartData.isEmpty) {
-      return const Center(child: Text('No collection trend data available.', style: TextStyle(color: AppColors.textSecondary)));
+      return  Center(child: Text('No collection trend data available.', style: TextStyle(color: AppColors.textSecondary)));
     }
 
     final double maxVal = _chartData.reduce((curr, next) => curr > next ? curr : next);
@@ -292,14 +292,14 @@ class _FinancePageState extends State<FinancePage> {
             children: [
               Text(
                 'PKR ${value >= 1000 ? "${(value / 1000).toStringAsFixed(1)}k" : value.toInt()}',
-                style: const TextStyle(fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.bold),
+                style:  TextStyle(fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Container(
                 width: 28,
                 height: barHeight == 0 ? 4 : barHeight,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient:  LinearGradient(
                     colors: [AppColors.iconBlue, Color(0xFF0EA5E9)],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
@@ -310,7 +310,7 @@ class _FinancePageState extends State<FinancePage> {
               const SizedBox(height: 8),
               Text(
                 label,
-                style: const TextStyle(fontSize: 12, color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                style:  TextStyle(fontSize: 12, color: AppColors.textPrimary, fontWeight: FontWeight.w600),
               ),
             ],
           );
@@ -330,13 +330,13 @@ class _FinancePageState extends State<FinancePage> {
               CircleAvatar(
                 radius: 14,
                 backgroundColor: AppColors.iconBgOrange,
-                child: const Icon(Iconsax.user, size: 16, color: AppColors.iconOrange),
+                child:  Icon(Iconsax.user, size: 16, color: AppColors.iconOrange),
               ),
               const SizedBox(width: 12),
-              Text(name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
+              Text(name, style:  TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
             ],
           ),
-          Text(amount, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.error)),
+          Text(amount, style:  TextStyle(fontWeight: FontWeight.bold, color: AppColors.error)),
         ],
       ),
     );

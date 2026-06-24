@@ -59,7 +59,7 @@ class ItinerariesPage extends StatelessWidget {
                     builder: (context, state) {
                       return state.maybeWhen(
                         loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (message) => Center(child: Text('Error: $message', style: const TextStyle(color: AppColors.error))),
+                        error: (message) => Center(child: Text('Error: $message', style:  TextStyle(color: AppColors.error))),
                         loaded: (itineraries) {
                           if (itineraries.isEmpty) {
                             return const Center(child: Text('No itineraries found.'));
@@ -110,14 +110,14 @@ class ItinerariesPage extends StatelessWidget {
               color: AppColors.iconBgBlue,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Center(child: Icon(Iconsax.map, size: 40, color: AppColors.iconBlue)),
+            child:  Center(child: Icon(Iconsax.map, size: 40, color: AppColors.iconBlue)),
           ),
           const SizedBox(height: 16),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary), maxLines: 2, overflow: TextOverflow.ellipsis),
+          Text(title, style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary), maxLines: 2, overflow: TextOverflow.ellipsis),
           const SizedBox(height: 4),
-          Text(duration, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+          Text(duration, style:  TextStyle(color: AppColors.textSecondary, fontSize: 13)),
           const Spacer(),
-          Text(price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.iconGreen)),
+          Text(price, style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.iconGreen)),
         ],
       ),
     );
@@ -183,7 +183,7 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const AlertDialog(
+      return  AlertDialog(
         backgroundColor: AppColors.surface,
         content: SizedBox(
           height: 100,
@@ -195,12 +195,12 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
     if (_error != null) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Error Loading Leads', style: TextStyle(color: AppColors.textPrimary)),
-        content: Text(_error!, style: const TextStyle(color: AppColors.error)),
+        title:  Text('Error Loading Leads', style: TextStyle(color: AppColors.textPrimary)),
+        content: Text(_error!, style:  TextStyle(color: AppColors.error)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close', style: TextStyle(color: AppColors.textSecondary)),
+            child:  Text('Close', style: TextStyle(color: AppColors.textSecondary)),
           ),
         ],
       );
@@ -209,15 +209,15 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
     if (_leads.isEmpty) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Add Itinerary', style: TextStyle(color: AppColors.textPrimary)),
-        content: const Text(
+        title:  Text('Add Itinerary', style: TextStyle(color: AppColors.textPrimary)),
+        content:  Text(
           'No leads found in the database. Please create a lead first.',
           style: TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close', style: TextStyle(color: AppColors.textSecondary)),
+            child:  Text('Close', style: TextStyle(color: AppColors.textSecondary)),
           ),
         ],
       );
@@ -225,7 +225,7 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
 
     return AlertDialog(
       backgroundColor: AppColors.surface,
-      title: const Text('Add Itinerary', style: TextStyle(color: AppColors.textPrimary)),
+      title:  Text('Add Itinerary', style: TextStyle(color: AppColors.textPrimary)),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -234,11 +234,11 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Lead Dropdown
-              const Text('Lead', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+               Text('Lead', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 dropdownColor: AppColors.surface,
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 value: _selectedLeadId,
                 items: _leads.map((lead) {
                   return DropdownMenuItem<String>(
@@ -261,12 +261,12 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
 
               // Title
               TextFormField(
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Title',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 onSaved: (val) => _title = val ?? '',
                 validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
               ),
@@ -274,12 +274,12 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
 
               // Description
               TextFormField(
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Description',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 onSaved: (val) => _description = val ?? '',
               ),
             ],
@@ -289,7 +289,7 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          child:  Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.iconPurple),

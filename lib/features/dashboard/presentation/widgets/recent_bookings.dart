@@ -20,7 +20,7 @@ class RecentBookings extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Iconsax.timer_1, color: AppColors.textPrimary, size: 20),
+               Icon(Iconsax.timer_1, color: AppColors.textPrimary, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Recent Bookings',
@@ -41,7 +41,7 @@ class RecentBookings extends StatelessWidget {
                   statusColor: AppColors.success,
                   statusBgColor: AppColors.iconBgGreen,
                 ),
-                const Divider(color: AppColors.border, height: 24),
+                 Divider(color: AppColors.border, height: 24),
                 _buildBookingItem(
                   context,
                   name: 'Ankita Singh',
@@ -69,7 +69,7 @@ class RecentBookings extends StatelessWidget {
           backgroundColor: AppColors.iconBgPurple,
           child: Text(
             initials,
-            style: const TextStyle(fontSize: 12, color: AppColors.iconPurple, fontWeight: FontWeight.bold),
+            style:  TextStyle(fontSize: 12, color: AppColors.iconPurple, fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(width: 12),
@@ -80,12 +80,12 @@ class RecentBookings extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
+                style:  TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
               ),
               const SizedBox(height: 2),
               Text(
                 destination,
-                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                style:  TextStyle(fontSize: 11, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -94,7 +94,7 @@ class RecentBookings extends StatelessWidget {
           flex: 1,
           child: Text(
             amount,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
+            style:  TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
           ),
         ),
         Container(

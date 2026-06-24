@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/core/router/app_router.dart';
 import 'package:crm_kurchudashboard/core/services/auth_service.dart';
+import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,13 +34,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'Kurchu CRM',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      routerConfig: appRouter,
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: AppColors.themeModeNotifier,
+      builder: (context, themeMode, _) {
+        return MaterialApp.router(
+          key: ValueKey(themeMode),
+          debugShowCheckedModeBanner: false,
+          title: 'Kurchu CRM',
+          themeMode: themeMode,
+          theme: ThemeData(
+            brightness: Brightness.light,
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            scaffoldBackgroundColor: const Color(0xFFFAFAFA),
+          ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.dark,
+            ),
+            scaffoldBackgroundColor: const Color(0xFF0F172A),
+          ),
+          routerConfig: appRouter,
+        );
+      },
     );
   }
 }

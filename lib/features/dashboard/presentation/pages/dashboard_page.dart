@@ -79,7 +79,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text(
+                               Text(
                                 'Here\'s what\'s happening with your business today.',
                                 style: TextStyle(
                                   color: AppColors.textSecondary,
@@ -99,7 +99,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                             child: Row(
                               children: [
-                                const Text(
+                                 Text(
                                   'Today, 24 May 2024',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
@@ -108,7 +108,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                const Icon(
+                                 Icon(
                                   Iconsax.arrow_down_1,
                                   size: 20,
                                   color: AppColors.textSecondary,
@@ -227,7 +227,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 children: [
                   Text(
                     'Error: $message',
-                    style: const TextStyle(color: AppColors.error),
+                    style:  TextStyle(color: AppColors.error),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(

@@ -110,7 +110,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
                             error: (message) => Center(
                               child: Text(
                                 'Error: $message',
-                                style: const TextStyle(color: AppColors.error),
+                                style:  TextStyle(color: AppColors.error),
                               ),
                             ),
                             loaded: (followUps) {
@@ -182,7 +182,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
       padding: const EdgeInsets.all(16),
       itemCount: followUps.length,
       separatorBuilder: (context, index) =>
-          const Divider(color: AppColors.border),
+           Divider(color: AppColors.border),
       itemBuilder: (context, index) {
         final followUp = followUps[index];
         final timeStr =
@@ -214,18 +214,18 @@ class _FollowUpsPageState extends State<FollowUpsPage>
           Expanded(
             child: Text(
               name,
-              style: const TextStyle(
+              style:  TextStyle(
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
               ),
             ),
           ),
-          Text(time, style: const TextStyle(color: AppColors.textSecondary)),
+          Text(time, style:  TextStyle(color: AppColors.textSecondary)),
           const SizedBox(width: 24),
           Row(
             children: [
               IconButton(
-                icon: const Icon(
+                icon:  Icon(
                   Iconsax.call,
                   color: AppColors.iconGreen,
                   size: 20,
@@ -233,7 +233,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
                 onPressed: () {},
               ),
               IconButton(
-                icon: const Icon(
+                icon:  Icon(
                   Iconsax.message,
                   color: AppColors.iconBlue,
                   size: 20,
@@ -259,7 +259,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: AppColors.surface,
-          title: const Text(
+          title:  Text(
             'Add Follow-up',
             style: TextStyle(color: AppColors.textPrimary),
           ),
@@ -273,7 +273,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
                 );
               }
               if (snapshot.hasError || !snapshot.hasData || snapshot.data!.leads.isEmpty) {
-                return const SizedBox(
+                return  SizedBox(
                   height: 100,
                   child: Center(
                     child: Text(
@@ -301,12 +301,12 @@ class _FollowUpsPageState extends State<FollowUpsPage>
                         children: [
                           DropdownButtonFormField<String>(
                             value: selectedLeadId,
-                            decoration: const InputDecoration(
+                            decoration:  InputDecoration(
                               labelText: 'Select Lead',
                               labelStyle: TextStyle(color: AppColors.textSecondary),
                             ),
                             dropdownColor: AppColors.surface,
-                            style: const TextStyle(color: AppColors.textPrimary),
+                            style:  TextStyle(color: AppColors.textPrimary),
                             items: leads.map((l) {
                               return DropdownMenuItem(
                                 value: l.id,
@@ -321,11 +321,11 @@ class _FollowUpsPageState extends State<FollowUpsPage>
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
-                            decoration: const InputDecoration(
+                            decoration:  InputDecoration(
                               labelText: 'Notes',
                               labelStyle: TextStyle(color: AppColors.textSecondary),
                             ),
-                            style: const TextStyle(color: AppColors.textPrimary),
+                            style:  TextStyle(color: AppColors.textPrimary),
                             onSaved: (val) => notes = val ?? '',
                           ),
                         ],
@@ -339,7 +339,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text(
+              child:  Text(
                 'Cancel',
                 style: TextStyle(color: AppColors.textSecondary),
               ),

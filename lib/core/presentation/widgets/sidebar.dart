@@ -2,6 +2,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
+import 'package:crm_kurchudashboard/core/di/injection.dart';
+import 'package:crm_kurchudashboard/core/services/auth_service.dart';
+
+// ... class definitions keep unchanged, targeting lines 167-202 below ...
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
@@ -10,7 +14,7 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 260,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surface,
         border: Border(right: BorderSide(color: AppColors.border)),
       ),
@@ -19,13 +23,13 @@ class Sidebar extends StatelessWidget {
         children: [
           // Logo Area
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(15.0),
             child: Row(
               children: [
-                const Icon(Iconsax.send_1, color: AppColors.primary, size: 28),
+                Icon(Iconsax.send_1, color: AppColors.primary, size: 28),
                 const SizedBox(width: 8),
                 Text(
-                  'Kurchu CRM',
+                  'KURCHU CRM',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
@@ -164,39 +168,57 @@ class Sidebar extends StatelessWidget {
                   onTap: () {},
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: AppColors.primary,
-                      radius: 18,
-                      child: const Text(
-                        'AM',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Asad Waqas',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.textPrimary,
-                                ),
+                Builder(
+                  builder: (context) {
+                    final user = getIt<AuthService>().getCurrentUser() ?? {};
+                    final firstName = user['firstName'] ?? 'Admin';
+                    final lastName = user['lastName'] ?? 'User';
+                    final fullName = "$firstName $lastName";
+                    final email = user['email'] ?? 'admin@kurchucrm.com';
+                    final initials =
+                        "${firstName.isNotEmpty ? firstName[0] : ''}${lastName.isNotEmpty ? lastName[0] : ''}"
+                            .toUpperCase();
+
+                    return Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: AppColors.primary,
+                          radius: 18,
+                          child: Text(
+                            initials.isEmpty ? 'AU' : initials,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          Text(
-                            'asadwaqas.dev@gmail.com',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: AppColors.textSecondary),
-                            overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                fullName,
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                email,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: AppColors.textSecondary),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -208,10 +230,10 @@ class Sidebar extends StatelessWidget {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12.0, bottom: 8.0),
+      padding: const EdgeInsets.only(left: 10.0, bottom: 6.0),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.textSecondary,
           fontSize: 10,
           fontWeight: FontWeight.bold,
@@ -232,7 +254,7 @@ class Sidebar extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
           color: isActive ? AppColors.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(8),

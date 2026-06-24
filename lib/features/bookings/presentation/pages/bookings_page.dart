@@ -63,7 +63,7 @@ class BookingsPage extends StatelessWidget {
             const SizedBox(height: 24),
             Container(
               width: double.infinity,
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 color: AppColors.surface,
                 border: Border(
                   top: BorderSide(color: AppColors.border),
@@ -79,7 +79,7 @@ class BookingsPage extends StatelessWidget {
                       ),
                       error: (message) => Padding(
                         padding: const EdgeInsets.all(48.0),
-                        child: Center(child: Text('Error: $message', style: const TextStyle(color: AppColors.error))),
+                        child: Center(child: Text('Error: $message', style:  TextStyle(color: AppColors.error))),
                       ),
                       loaded: (bookings) {
                         if (bookings.isEmpty) {
@@ -95,7 +95,7 @@ class BookingsPage extends StatelessWidget {
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(minWidth: constraints.maxWidth),
                                 child: DataTable(
-                                  headingTextStyle: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                                  headingTextStyle:  TextStyle(fontWeight: FontWeight.bold, color: AppColors.textSecondary),
                                   columns: const [
                                     DataColumn(label: Text('Booking ID')),
                                     DataColumn(label: Text('Lead ID')),
@@ -260,7 +260,7 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const AlertDialog(
+      return  AlertDialog(
         backgroundColor: AppColors.surface,
         content: SizedBox(
           height: 100,
@@ -272,12 +272,12 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
     if (_error != null) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Error Loading Data', style: TextStyle(color: AppColors.textPrimary)),
-        content: Text(_error!, style: const TextStyle(color: AppColors.error)),
+        title:  Text('Error Loading Data', style: TextStyle(color: AppColors.textPrimary)),
+        content: Text(_error!, style:  TextStyle(color: AppColors.error)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close', style: TextStyle(color: AppColors.textSecondary)),
+            child:  Text('Close', style: TextStyle(color: AppColors.textSecondary)),
           ),
         ],
       );
@@ -286,19 +286,19 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
     if (_leads.isEmpty || _services.isEmpty) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Add Booking', style: TextStyle(color: AppColors.textPrimary)),
+        title:  Text('Add Booking', style: TextStyle(color: AppColors.textPrimary)),
         content: Text(
           _leads.isEmpty && _services.isEmpty
               ? 'No leads and no services found in the database. Please create a lead and a company service first.'
               : _leads.isEmpty
                   ? 'No leads found. Please create a lead first.'
                   : 'No company services found. Please create a service first.',
-          style: const TextStyle(color: AppColors.textSecondary),
+          style:  TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close', style: TextStyle(color: AppColors.textSecondary)),
+            child:  Text('Close', style: TextStyle(color: AppColors.textSecondary)),
           ),
         ],
       );
@@ -306,7 +306,7 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
 
     return AlertDialog(
       backgroundColor: AppColors.surface,
-      title: const Text('Add Booking', style: TextStyle(color: AppColors.textPrimary)),
+      title:  Text('Add Booking', style: TextStyle(color: AppColors.textPrimary)),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -315,11 +315,11 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Lead Dropdown
-              const Text('Lead', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+               Text('Lead', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 dropdownColor: AppColors.surface,
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 value: _selectedLeadId,
                 items: _leads.map((lead) {
                   return DropdownMenuItem<String>(
@@ -341,11 +341,11 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
               const SizedBox(height: 16),
 
               // Service Dropdown
-              const Text('Service', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+               Text('Service', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 dropdownColor: AppColors.surface,
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 value: _selectedServiceId,
                 items: _services.map((service) {
                   return DropdownMenuItem<String>(
@@ -372,12 +372,12 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
               // Total Amount
               TextFormField(
                 controller: _amountController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Total Amount',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 keyboardType: TextInputType.number,
                 validator: (val) {
                   if (val == null || val.isEmpty) return 'Please enter total amount';
@@ -390,12 +390,12 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
               // Collected Amount
               TextFormField(
                 controller: _collectedAmountController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Collected Amount',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 keyboardType: TextInputType.number,
                 validator: (val) {
                   if (val != null && val.isNotEmpty && double.tryParse(val) == null) {
@@ -411,7 +411,7 @@ class _AddBookingDialogState extends State<AddBookingDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          child:  Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.iconPurple),

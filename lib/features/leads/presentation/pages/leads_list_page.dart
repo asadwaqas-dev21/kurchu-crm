@@ -39,7 +39,7 @@ class LeadsListPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                     Text(
                       'Manage and track all your leads.',
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
@@ -56,28 +56,45 @@ class LeadsListPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: AppColors.border),
                       ),
-                      child: const TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search leads...',
-                          hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                          prefixIcon: Icon(Iconsax.search_normal, color: AppColors.textSecondary, size: 20),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 12),
+                           Icon(
+                            Iconsax.search_normal,
+                            color: AppColors.textSecondary,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: TextField(
+                              style:  TextStyle(
+                                fontSize: 14,
+                                color: AppColors.textPrimary,
+                              ),
+                              decoration:  InputDecoration(
+                                hintText: 'Search leads...',
+                                hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                                border: InputBorder.none,
+                                isDense: true,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 16),
                     // Filter Button
                     Container(
                       height: 40,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding:  EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         color: AppColors.surface,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: AppColors.border),
                       ),
                       child: Row(
-                        children: const [
+                        children:  [
                           Icon(Iconsax.filter, size: 20, color: AppColors.textSecondary),
                           SizedBox(width: 8),
                           Text('Filters', style: TextStyle(fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
@@ -127,7 +144,7 @@ class LeadsListPage extends StatelessWidget {
                     ),
                     error: (message) => Padding(
                       padding: const EdgeInsets.all(48.0),
-                      child: Center(child: Text('Error: $message', style: const TextStyle(color: AppColors.error))),
+                      child: Center(child: Text('Error: $message', style:  TextStyle(color: AppColors.error))),
                     ),
                     loaded: (leads, total, skip, limit) {
                       final currentPage = (skip / limit).floor() + 1;
@@ -152,12 +169,12 @@ class LeadsListPage extends StatelessWidget {
                                           child: Center(child: Text('No leads found.')),
                                         )
                                       : DataTable(
-                                          headingTextStyle: const TextStyle(
+                                          headingTextStyle:  TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: AppColors.textSecondary,
                                             fontSize: 13,
                                           ),
-                                          dataTextStyle: const TextStyle(
+                                          dataTextStyle:  TextStyle(
                                             color: AppColors.textPrimary,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
@@ -180,7 +197,7 @@ class LeadsListPage extends StatelessWidget {
                               );
                             },
                           ),
-                          const Divider(height: 1, color: AppColors.border),
+                           Divider(height: 1, color: AppColors.border),
                           // Pagination
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -189,7 +206,7 @@ class LeadsListPage extends StatelessWidget {
                               children: [
                                 Text(
                                   'Showing $showingStart to $showingEnd of $total entries',
-                                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                                  style:  TextStyle(color: AppColors.textSecondary, fontSize: 13),
                                 ),
                                 Row(
                                   children: [
@@ -243,7 +260,7 @@ class LeadsListPage extends StatelessWidget {
                                           );
 
                                           if (currentPage > 3) {
-                                            pageButtons.add(const Padding(
+                                            pageButtons.add( Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 4),
                                               child: Text('...', style: TextStyle(color: AppColors.textSecondary)),
                                             ));
@@ -273,7 +290,7 @@ class LeadsListPage extends StatelessWidget {
                                           }
 
                                           if (currentPage < totalPages - 2) {
-                                            pageButtons.add(const Padding(
+                                            pageButtons.add( Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 4),
                                               child: Text('...', style: TextStyle(color: AppColors.textSecondary)),
                                             ));
@@ -332,7 +349,7 @@ class LeadsListPage extends StatelessWidget {
     return DataRow(
       cells: [
         DataCell(Text('${lead.firstName} ${lead.lastName}')),
-        DataCell(Text(lead.phone ?? 'N/A', style: const TextStyle(fontWeight: FontWeight.normal, color: AppColors.textSecondary))),
+        DataCell(Text(lead.phone ?? 'N/A', style:  TextStyle(fontWeight: FontWeight.normal, color: AppColors.textSecondary))),
         DataCell(const Text('Website', style: TextStyle(fontWeight: FontWeight.normal))),
         DataCell(
           Container(
@@ -354,11 +371,11 @@ class LeadsListPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: const Icon(Iconsax.edit, size: 20, color: AppColors.textSecondary),
+                icon:  Icon(Iconsax.edit, size: 20, color: AppColors.textSecondary),
                 onPressed: () => _showEditLeadDialog(context, lead),
               ),
               IconButton(
-                icon: const Icon(Iconsax.trash, size: 20, color: AppColors.error),
+                icon:  Icon(Iconsax.trash, size: 20, color: AppColors.error),
                 onPressed: () => _showDeleteConfirmation(context, lead),
               ),
             ],
@@ -448,7 +465,7 @@ class LeadsListPage extends StatelessWidget {
           builder: (statefulContext, setState) {
             return AlertDialog(
               backgroundColor: AppColors.surface,
-              title: const Text('Add Lead', style: TextStyle(color: AppColors.textPrimary)),
+              title:  Text('Add Lead', style: TextStyle(color: AppColors.textPrimary)),
               content: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -459,8 +476,8 @@ class LeadsListPage extends StatelessWidget {
                         children: [
                           Expanded(
                             child: TextFormField(
-                              decoration: const InputDecoration(labelText: 'First Name', labelStyle: TextStyle(color: AppColors.textSecondary)),
-                              style: const TextStyle(color: AppColors.textPrimary),
+                              decoration:  InputDecoration(labelText: 'First Name', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                              style:  TextStyle(color: AppColors.textPrimary),
                               onSaved: (val) => firstName = val ?? '',
                               validator: (val) => val!.isEmpty ? 'Required' : null,
                             ),
@@ -468,8 +485,8 @@ class LeadsListPage extends StatelessWidget {
                           const SizedBox(width: 16),
                           Expanded(
                             child: TextFormField(
-                              decoration: const InputDecoration(labelText: 'Last Name', labelStyle: TextStyle(color: AppColors.textSecondary)),
-                              style: const TextStyle(color: AppColors.textPrimary),
+                              decoration:  InputDecoration(labelText: 'Last Name', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                              style:  TextStyle(color: AppColors.textPrimary),
                               onSaved: (val) => lastName = val ?? '',
                               validator: (val) => val!.isEmpty ? 'Required' : null,
                             ),
@@ -477,21 +494,21 @@ class LeadsListPage extends StatelessWidget {
                         ],
                       ),
                       TextFormField(
-                        decoration: const InputDecoration(labelText: 'Phone', labelStyle: TextStyle(color: AppColors.textSecondary)),
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        decoration:  InputDecoration(labelText: 'Phone', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         onSaved: (val) => phone = val ?? '',
                       ),
                       TextFormField(
-                        decoration: const InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: AppColors.textSecondary)),
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        decoration:  InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         onSaved: (val) => email = val ?? '',
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
                         value: stage,
-                        decoration: const InputDecoration(labelText: 'Status', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        decoration:  InputDecoration(labelText: 'Status', labelStyle: TextStyle(color: AppColors.textSecondary)),
                         dropdownColor: AppColors.surface,
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         items: ['NEW', 'CONTACTED', 'INTERESTED', 'DEMO', 'NEGOTIATION', 'WON', 'LOST']
                             .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                             .toList(),
@@ -499,9 +516,9 @@ class LeadsListPage extends StatelessWidget {
                       ),
                       DropdownButtonFormField<String>(
                         value: sourceId,
-                        decoration: const InputDecoration(labelText: 'Source', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        decoration:  InputDecoration(labelText: 'Source', labelStyle: TextStyle(color: AppColors.textSecondary)),
                         dropdownColor: AppColors.surface,
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         items: const [
                           DropdownMenuItem(value: 'cmqs1yxc0000614552yrasd3s', child: Text('Website')),
                         ],
@@ -509,9 +526,9 @@ class LeadsListPage extends StatelessWidget {
                       ),
                       DropdownButtonFormField<String>(
                         value: assignedToId,
-                        decoration: const InputDecoration(labelText: 'Assigned To', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        decoration:  InputDecoration(labelText: 'Assigned To', labelStyle: TextStyle(color: AppColors.textSecondary)),
                         dropdownColor: AppColors.surface,
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         items: const [
                           DropdownMenuItem(value: 'cmqs1ywv200021455ssy0r8oz', child: Text('Agent')),
                         ],
@@ -531,7 +548,7 @@ class LeadsListPage extends StatelessWidget {
                           }
                         },
                         child: InputDecorator(
-                          decoration: const InputDecoration(
+                          decoration:  InputDecoration(
                             labelText: 'Follow-up Date',
                             labelStyle: TextStyle(color: AppColors.textSecondary),
                           ),
@@ -548,7 +565,7 @@ class LeadsListPage extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+                  child:  Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.iconPurple),
@@ -596,7 +613,7 @@ class LeadsListPage extends StatelessWidget {
           builder: (statefulContext, setState) {
             return AlertDialog(
               backgroundColor: AppColors.surface,
-              title: const Text('Edit Lead', style: TextStyle(color: AppColors.textPrimary)),
+              title:  Text('Edit Lead', style: TextStyle(color: AppColors.textPrimary)),
               content: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -608,8 +625,8 @@ class LeadsListPage extends StatelessWidget {
                           Expanded(
                             child: TextFormField(
                               initialValue: firstName,
-                              decoration: const InputDecoration(labelText: 'First Name', labelStyle: TextStyle(color: AppColors.textSecondary)),
-                              style: const TextStyle(color: AppColors.textPrimary),
+                              decoration:  InputDecoration(labelText: 'First Name', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                              style:  TextStyle(color: AppColors.textPrimary),
                               onSaved: (val) => firstName = val ?? '',
                               validator: (val) => val!.isEmpty ? 'Required' : null,
                             ),
@@ -618,8 +635,8 @@ class LeadsListPage extends StatelessWidget {
                           Expanded(
                             child: TextFormField(
                               initialValue: lastName,
-                              decoration: const InputDecoration(labelText: 'Last Name', labelStyle: TextStyle(color: AppColors.textSecondary)),
-                              style: const TextStyle(color: AppColors.textPrimary),
+                              decoration:  InputDecoration(labelText: 'Last Name', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                              style:  TextStyle(color: AppColors.textPrimary),
                               onSaved: (val) => lastName = val ?? '',
                               validator: (val) => val!.isEmpty ? 'Required' : null,
                             ),
@@ -628,22 +645,22 @@ class LeadsListPage extends StatelessWidget {
                       ),
                       TextFormField(
                         initialValue: phone,
-                        decoration: const InputDecoration(labelText: 'Phone', labelStyle: TextStyle(color: AppColors.textSecondary)),
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        decoration:  InputDecoration(labelText: 'Phone', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         onSaved: (val) => phone = val ?? '',
                       ),
                       TextFormField(
                         initialValue: email,
-                        decoration: const InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: AppColors.textSecondary)),
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        decoration:  InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         onSaved: (val) => email = val ?? '',
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
                         value: ['NEW', 'CONTACTED', 'INTERESTED', 'DEMO', 'NEGOTIATION', 'WON', 'LOST'].contains(stage) ? stage : 'NEW',
-                        decoration: const InputDecoration(labelText: 'Status', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        decoration:  InputDecoration(labelText: 'Status', labelStyle: TextStyle(color: AppColors.textSecondary)),
                         dropdownColor: AppColors.surface,
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         items: ['NEW', 'CONTACTED', 'INTERESTED', 'DEMO', 'NEGOTIATION', 'WON', 'LOST']
                             .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                             .toList(),
@@ -651,9 +668,9 @@ class LeadsListPage extends StatelessWidget {
                       ),
                       DropdownButtonFormField<String>(
                         value: sourceId,
-                        decoration: const InputDecoration(labelText: 'Source', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        decoration:  InputDecoration(labelText: 'Source', labelStyle: TextStyle(color: AppColors.textSecondary)),
                         dropdownColor: AppColors.surface,
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         items: const [
                           DropdownMenuItem(value: 'cmqs1yxc0000614552yrasd3s', child: Text('Website')),
                         ],
@@ -661,9 +678,9 @@ class LeadsListPage extends StatelessWidget {
                       ),
                       DropdownButtonFormField<String>(
                         value: assignedToId,
-                        decoration: const InputDecoration(labelText: 'Assigned To', labelStyle: TextStyle(color: AppColors.textSecondary)),
+                        decoration:  InputDecoration(labelText: 'Assigned To', labelStyle: TextStyle(color: AppColors.textSecondary)),
                         dropdownColor: AppColors.surface,
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        style:  TextStyle(color: AppColors.textPrimary),
                         items: const [
                           DropdownMenuItem(value: 'cmqs1ywv200021455ssy0r8oz', child: Text('Agent')),
                         ],
@@ -683,7 +700,7 @@ class LeadsListPage extends StatelessWidget {
                           }
                         },
                         child: InputDecorator(
-                          decoration: const InputDecoration(
+                          decoration:  InputDecoration(
                             labelText: 'Follow-up Date',
                             labelStyle: TextStyle(color: AppColors.textSecondary),
                           ),
@@ -700,7 +717,7 @@ class LeadsListPage extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+                  child:  Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.iconPurple),
@@ -736,12 +753,12 @@ class LeadsListPage extends StatelessWidget {
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: AppColors.surface,
-          title: const Text('Delete Lead', style: TextStyle(color: AppColors.textPrimary)),
-          content: Text('Are you sure you want to delete ${lead.firstName} ${lead.lastName}?', style: const TextStyle(color: AppColors.textSecondary)),
+          title:  Text('Delete Lead', style: TextStyle(color: AppColors.textPrimary)),
+          content: Text('Are you sure you want to delete ${lead.firstName} ${lead.lastName}?', style:  TextStyle(color: AppColors.textSecondary)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+              child:  Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),

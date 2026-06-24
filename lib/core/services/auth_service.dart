@@ -121,7 +121,10 @@ class AuthService {
   // Get current user
   Map<String, dynamic>? getCurrentUser() {
     final user = _userBox.get('user');
-    return user is Map<String, dynamic> ? user : null;
+    if (user is Map) {
+      return Map<String, dynamic>.from(user);
+    }
+    return null;
   }
 
   // Update Profile
@@ -145,6 +148,31 @@ class AuthService {
       return true;
     } catch (e) {
       print('UPDATE PROFILE EXCEPTION: $e');
+      return false;
+    }
+  }
+
+  // Get Notification Settings
+  Future<Map<String, dynamic>?> getNotificationSettings() async {
+    try {
+      final response = await _apiClient.get('/auth/notification-settings');
+      return response.data['data'] as Map<String, dynamic>;
+    } catch (e) {
+      print('GET NOTIFICATION SETTINGS EXCEPTION: $e');
+      return null;
+    }
+  }
+
+  // Update Notification Settings
+  Future<bool> updateNotificationSettings(Map<String, dynamic> settings) async {
+    try {
+      await _apiClient.put(
+        '/auth/notification-settings',
+        data: settings,
+      );
+      return true;
+    } catch (e) {
+      print('UPDATE NOTIFICATION SETTINGS EXCEPTION: $e');
       return false;
     }
   }

@@ -108,7 +108,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
+      return  Scaffold(
         backgroundColor: AppColors.background,
         body: Center(child: CircularProgressIndicator()),
       );
@@ -118,7 +118,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
       return Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: Text('Error loading invoices: $_error', style: const TextStyle(color: AppColors.error)),
+          child: Text('Error loading invoices: $_error', style:  TextStyle(color: AppColors.error)),
         ),
       );
     }
@@ -144,7 +144,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                     Text(
                       'View and manage all invoices.',
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
@@ -189,7 +189,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   if (_invoices.isEmpty) {
-                    return const Padding(
+                    return  Padding(
                       padding: EdgeInsets.all(48.0),
                       child: Center(
                         child: Text(
@@ -206,7 +206,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                         minWidth: constraints.maxWidth,
                       ),
                       child: DataTable(
-                        headingTextStyle: const TextStyle(
+                        headingTextStyle:  TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.textSecondary,
                         ),
@@ -269,7 +269,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                                           }
                                         }
                                       },
-                                      child: const Icon(Iconsax.document_download, size: 20, color: AppColors.textSecondary),
+                                      child:  Icon(Iconsax.document_download, size: 20, color: AppColors.textSecondary),
                                     ),
                                     const SizedBox(width: 12),
                                     GestureDetector(
@@ -288,7 +288,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                                           }
                                         }
                                       },
-                                      child: const Icon(Iconsax.printer, size: 20, color: AppColors.textSecondary),
+                                      child:  Icon(Iconsax.printer, size: 20, color: AppColors.textSecondary),
                                     ),
                                   ],
                                 ),
@@ -386,7 +386,7 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
+            colorScheme:  ColorScheme.light(
               primary: AppColors.iconPurple,
               onPrimary: Colors.white,
               onSurface: AppColors.textPrimary,
@@ -406,7 +406,7 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const AlertDialog(
+      return  AlertDialog(
         backgroundColor: AppColors.surface,
         content: SizedBox(
           height: 100,
@@ -418,12 +418,12 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
     if (_error != null) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Error Loading Data', style: TextStyle(color: AppColors.textPrimary)),
-        content: Text(_error!, style: const TextStyle(color: AppColors.error)),
+        title:  Text('Error Loading Data', style: TextStyle(color: AppColors.textPrimary)),
+        content: Text(_error!, style:  TextStyle(color: AppColors.error)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close', style: TextStyle(color: AppColors.textSecondary)),
+            child:  Text('Close', style: TextStyle(color: AppColors.textSecondary)),
           ),
         ],
       );
@@ -432,15 +432,15 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
     if (_availableBookings.isEmpty) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('New Invoice', style: TextStyle(color: AppColors.textPrimary)),
-        content: const Text(
+        title:  Text('New Invoice', style: TextStyle(color: AppColors.textPrimary)),
+        content:  Text(
           'No uninvoiced bookings found. All current bookings have invoices, or no bookings exist. Please create a booking first.',
           style: TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close', style: TextStyle(color: AppColors.textSecondary)),
+            child:  Text('Close', style: TextStyle(color: AppColors.textSecondary)),
           ),
         ],
       );
@@ -448,7 +448,7 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
 
     return AlertDialog(
       backgroundColor: AppColors.surface,
-      title: const Text('New Invoice', style: TextStyle(color: AppColors.textPrimary)),
+      title:  Text('New Invoice', style: TextStyle(color: AppColors.textPrimary)),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -457,11 +457,11 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Booking Dropdown
-              const Text('Booking', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+               Text('Booking', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 dropdownColor: AppColors.surface,
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 value: _selectedBookingId,
                 items: _availableBookings.map((b) {
                   final leadName = _leadNames[b.leadId] ?? 'Lead ${b.leadId.substring(0, 8)}';
@@ -488,12 +488,12 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
               // Total Amount
               TextFormField(
                 controller: _amountController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Amount',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 keyboardType: TextInputType.number,
                 validator: (val) {
                   if (val == null || val.isEmpty) return 'Please enter an invoice amount';
@@ -504,11 +504,11 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
               const SizedBox(height: 16),
 
               // Status Dropdown
-              const Text('Status', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+               Text('Status', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 dropdownColor: AppColors.surface,
-                style: const TextStyle(color: AppColors.textPrimary),
+                style:  TextStyle(color: AppColors.textPrimary),
                 value: _selectedStatus,
                 items: const [
                   DropdownMenuItem(value: 'DRAFT', child: Text('Draft')),
@@ -531,7 +531,7 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
               const SizedBox(height: 16),
 
               // Due Date Picker
-              const Text('Due Date', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+               Text('Due Date', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               const SizedBox(height: 8),
               InkWell(
                 onTap: () => _selectDueDate(context),
@@ -546,9 +546,9 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
                     children: [
                       Text(
                         DateFormat('dd MMM yyyy').format(_selectedDueDate),
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        style:  TextStyle(color: AppColors.textPrimary),
                       ),
-                      const Icon(Iconsax.calendar, color: AppColors.textSecondary, size: 20),
+                       Icon(Iconsax.calendar, color: AppColors.textSecondary, size: 20),
                     ],
                   ),
                 ),
@@ -560,7 +560,7 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          child:  Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.iconPurple),

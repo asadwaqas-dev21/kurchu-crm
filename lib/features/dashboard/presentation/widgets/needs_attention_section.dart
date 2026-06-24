@@ -27,7 +27,7 @@ class NeedsAttentionSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Iconsax.warning_2, color: AppColors.warning, size: 20),
+               Icon(Iconsax.warning_2, color: AppColors.warning, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Needs attention',
@@ -109,7 +109,7 @@ class NeedsAttentionSection extends StatelessWidget {
               children: [
                 Text(
                   count,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     color: AppColors.textPrimary,
@@ -117,7 +117,7 @@ class NeedsAttentionSection extends StatelessWidget {
                 ),
                 Text(
                   label,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 11,
                   ),

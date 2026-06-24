@@ -21,6 +21,17 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _isSaving = false;
   String _activeTab = 'Profile';
 
+  bool _emailLeads = true;
+  bool _emailBookings = true;
+  bool _emailSystem = false;
+  bool _pushLeads = true;
+  bool _pushBookings = true;
+  bool _pushSystem = true;
+  bool _smsLeads = false;
+  bool _smsBookings = false;
+  bool _isLoadingSettings = false;
+  bool _isSavingSettings = false;
+
   @override
   void initState() {
     super.initState();
@@ -90,7 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+             Text(
               'Manage your preferences and account settings.',
               style: TextStyle(color: AppColors.textSecondary),
             ),
@@ -126,7 +137,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   flex: 3,
                   child: _activeTab == 'Profile'
                       ? _buildProfileContent(initials)
-                      : _buildPlaceholderContent(),
+                      : (_activeTab == 'Notifications'
+                          ? _buildNotificationsContent()
+                          : _buildPlaceholderContent()),
                 ),
               ],
             ),
@@ -143,6 +156,9 @@ class _SettingsPageState extends State<SettingsPage> {
         setState(() {
           _activeTab = title;
         });
+        if (title == 'Notifications') {
+          _loadNotificationSettings();
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -191,7 +207,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+             Text(
               'Profile Information',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -207,7 +223,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   backgroundColor: AppColors.iconBgBlue,
                   child: Text(
                     initials,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: AppColors.iconBlue,
@@ -224,7 +240,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     border: Border.all(color: AppColors.border),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text(
+                  child:  Text(
                     'Change Avatar',
                     style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                   ),
@@ -284,7 +300,7 @@ class _SettingsPageState extends State<SettingsPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style:  TextStyle(
             fontWeight: FontWeight.w500,
             color: AppColors.textSecondary,
             fontSize: 13,
@@ -333,19 +349,264 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Iconsax.setting_3, size: 48, color: AppColors.textSecondary),
+             Icon(Iconsax.setting_3, size: 48, color: AppColors.textSecondary),
             const SizedBox(height: 16),
             Text(
               '$_activeTab Settings',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              style:  TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
             ),
             const SizedBox(height: 8),
-            const Text(
+             Text(
               'This settings panel is coming soon!',
               style: TextStyle(color: AppColors.textSecondary),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> _loadNotificationSettings() async {
+    setState(() {
+      _isLoadingSettings = true;
+    });
+
+    final settings = await getIt<AuthService>().getNotificationSettings();
+    if (settings != null && mounted) {
+      setState(() {
+        _emailLeads = settings['emailLeads'] ?? true;
+        _emailBookings = settings['emailBookings'] ?? true;
+        _emailSystem = settings['emailSystem'] ?? false;
+        
+        _pushLeads = settings['pushLeads'] ?? true;
+        _pushBookings = settings['pushBookings'] ?? true;
+        _pushSystem = settings['pushSystem'] ?? true;
+        
+        _smsLeads = settings['smsLeads'] ?? false;
+        _smsBookings = settings['smsBookings'] ?? false;
+        
+        _isLoadingSettings = false;
+      });
+    } else if (mounted) {
+      setState(() {
+        _isLoadingSettings = false;
+      });
+    }
+  }
+
+  Future<void> _saveNotificationSettings() async {
+    setState(() {
+      _isSavingSettings = true;
+    });
+
+    final success = await getIt<AuthService>().updateNotificationSettings({
+      'emailLeads': _emailLeads,
+      'emailBookings': _emailBookings,
+      'emailSystem': _emailSystem,
+      'pushLeads': _pushLeads,
+      'pushBookings': _pushBookings,
+      'pushSystem': _pushSystem,
+      'smsLeads': _smsLeads,
+      'smsBookings': _smsBookings,
+    });
+
+    if (!mounted) return;
+    setState(() {
+      _isSavingSettings = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success ? 'Notification settings updated successfully!' : 'Failed to update settings.',
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: success ? AppColors.success : AppColors.error,
+      ),
+    );
+  }
+
+  Widget _buildNotificationsContent() {
+    if (_isLoadingSettings) {
+      return Container(
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.border),
+        ),
+        padding: const EdgeInsets.all(48),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+           Text(
+            'Notification Preferences',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+           Text(
+            'Select how and when you want to receive alerts and system updates.',
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+          ),
+          const SizedBox(height: 24),
+          
+          _buildNotificationSectionHeader('Email Notifications'),
+          _buildSwitchRow(
+            'New leads assigned',
+            'Get notified immediately when a lead is assigned to you.',
+            _emailLeads,
+            (val) => setState(() => _emailLeads = val),
+          ),
+           Divider(color: AppColors.border, height: 16),
+          _buildSwitchRow(
+            'Booking status updates',
+            'Get notified when a client confirms or cancels a booking.',
+            _emailBookings,
+            (val) => setState(() => _emailBookings = val),
+          ),
+           Divider(color: AppColors.border, height: 16),
+          _buildSwitchRow(
+            'System alerts',
+            'Receive security warnings and system maintenance logs.',
+            _emailSystem,
+            (val) => setState(() => _emailSystem = val),
+          ),
+          
+          const SizedBox(height: 24),
+          _buildNotificationSectionHeader('Push Notifications'),
+          _buildSwitchRow(
+            'Activity on assigned leads',
+            'Popups when comments are added or follow-ups are due.',
+            _pushLeads,
+            (val) => setState(() => _pushLeads = val),
+          ),
+           Divider(color: AppColors.border, height: 16),
+          _buildSwitchRow(
+            'Bookings and Payments',
+            'Popups when deposits are cleared or bookings are created.',
+            _pushBookings,
+            (val) => setState(() => _pushBookings = val),
+          ),
+           Divider(color: AppColors.border, height: 16),
+          _buildSwitchRow(
+            'System updates',
+            'Popups for system status changes or new releases.',
+            _pushSystem,
+            (val) => setState(() => _pushSystem = val),
+          ),
+          
+          const SizedBox(height: 24),
+          _buildNotificationSectionHeader('SMS Notifications'),
+          _buildSwitchRow(
+            'Leads urgent follow-ups',
+            'Receive text message reminders for overdue calls.',
+            _smsLeads,
+            (val) => setState(() => _smsLeads = val),
+          ),
+           Divider(color: AppColors.border, height: 16),
+          _buildSwitchRow(
+            'Bookings confirmation',
+            'Receive text alerts for newly confirmed trips.',
+            _smsBookings,
+            (val) => setState(() => _smsBookings = val),
+          ),
+          
+          const SizedBox(height: 32),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.iconPurple,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: _isSavingSettings ? null : _saveNotificationSettings,
+              child: _isSavingSettings
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    )
+                  : const Text(
+                      'Save Preferences',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Text(
+        title.toUpperCase(),
+        style:  TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textSecondary,
+          letterSpacing: 1.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwitchRow(String title, String subtitle, bool value, ValueChanged<bool> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style:  TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style:  TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Switch.adaptive(
+            value: value,
+            onChanged: onChanged,
+            activeTrackColor: AppColors.iconPurple,
+          ),
+        ],
       ),
     );
   }

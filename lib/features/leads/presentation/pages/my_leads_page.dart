@@ -6,10 +6,8 @@ import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_bloc.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_event.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_state.dart';
-import 'package:crm_kurchudashboard/features/leads/data/models/lead_model.dart';
-
 class MyLeadsPage extends StatelessWidget {
-  const MyLeadsPage({Key? key}) : super(key: key);
+  const MyLeadsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +35,7 @@ class MyLeadsPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
+                       Text(
                         'Manage leads currently assigned to you.',
                         style: TextStyle(color: AppColors.textSecondary),
                       ),
@@ -53,14 +51,31 @@ class MyLeadsPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: AppColors.border),
                         ),
-                        child: const TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Search my leads...',
-                            hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                            prefixIcon: Icon(Iconsax.search_normal, color: AppColors.textSecondary, size: 20),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(vertical: 10),
-                          ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 12),
+                             Icon(
+                              Iconsax.search_normal,
+                              color: AppColors.textSecondary,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: TextField(
+                                style:  TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.textPrimary,
+                                ),
+                                decoration:  InputDecoration(
+                                  hintText: 'Search my leads...',
+                                  hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -73,7 +88,7 @@ class MyLeadsPage extends StatelessWidget {
             // Data Table Section
             Container(
               width: double.infinity,
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 color: AppColors.surface,
                 border: Border(
                   top: BorderSide(color: AppColors.border),
@@ -91,7 +106,7 @@ class MyLeadsPage extends StatelessWidget {
                       ),
                       error: (message) => Padding(
                         padding: const EdgeInsets.all(48.0),
-                        child: Center(child: Text('Error: $message', style: const TextStyle(color: AppColors.error))),
+                        child: Center(child: Text('Error: $message', style:  TextStyle(color: AppColors.error))),
                       ),
                       loaded: (leads, total, skip, limit) {
                         if (leads.isEmpty) {
@@ -109,12 +124,12 @@ class MyLeadsPage extends StatelessWidget {
                                   minWidth: constraints.maxWidth,
                                 ),
                                 child: DataTable(
-                                  headingTextStyle: const TextStyle(
+                                  headingTextStyle:  TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.textSecondary,
                                     fontSize: 13,
                                   ),
-                                  dataTextStyle: const TextStyle(
+                                  dataTextStyle:  TextStyle(
                                     color: AppColors.textPrimary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -161,7 +176,7 @@ class MyLeadsPage extends StatelessWidget {
     return DataRow(
       cells: [
         DataCell(Text(name)),
-        DataCell(Text(phone, style: const TextStyle(fontWeight: FontWeight.normal, color: AppColors.textSecondary))),
+        DataCell(Text(phone, style:  TextStyle(fontWeight: FontWeight.normal, color: AppColors.textSecondary))),
         DataCell(Text(source, style: const TextStyle(fontWeight: FontWeight.normal))),
         DataCell(
           Container(
@@ -176,9 +191,9 @@ class MyLeadsPage extends StatelessWidget {
             ),
           ),
         ),
-        DataCell(Text(date, style: const TextStyle(fontWeight: FontWeight.normal))),
+        DataCell(Text(date, style:  TextStyle(fontWeight: FontWeight.normal))),
         DataCell(Row(
-          children: const [
+          children:  [
             Icon(Iconsax.call, size: 20, color: AppColors.iconGreen),
             SizedBox(width: 16),
             Icon(Iconsax.message, size: 20, color: AppColors.iconBlue),
