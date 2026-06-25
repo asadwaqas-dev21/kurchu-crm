@@ -32,20 +32,14 @@ final appRouter = GoRouter(
     return null;
   },
   routes: [
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginPage(),
-    ),
+    GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
     ShellRoute(
       builder: (context, state, child) => BlocProvider(
         create: (context) => getIt<DashboardBloc>(),
         child: MainLayout(child: child),
       ),
       routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const DashboardPage(),
-        ),
+        GoRoute(path: '/', builder: (context, state) => const DashboardPage()),
         GoRoute(
           path: '/my-leads',
           builder: (context, state) => const MyLeadsPage(),

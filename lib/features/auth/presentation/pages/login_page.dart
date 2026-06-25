@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
@@ -58,10 +60,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final logoBgColor = AppColors.isDarkMode
-        ? AppColors.primary.withOpacity(0.15)
-        : AppColors.primary.withOpacity(0.08);
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
@@ -90,16 +88,12 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   // Logo Icon
                   Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: logoBgColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Iconsax.send_1,
-                        color: AppColors.primary,
-                        size: 40,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        'assets/appicon.png',
+                        width: 80,
+                        height: 80,
                       ),
                     ),
                   ),

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +11,63 @@ import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_event.
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_state.dart';
 import 'package:crm_kurchudashboard/features/leads/data/models/lead_model.dart';
 
-class PipelineBoardPage extends StatelessWidget {
+class PipelineBoardPage extends StatefulWidget {
   const PipelineBoardPage({super.key});
+
+  @override
+  State<PipelineBoardPage> createState() => _PipelineBoardPageState();
+}
+
+class _PipelineBoardPageState extends State<PipelineBoardPage> {
+  String _searchQuery = '';
+  String? _selectedStage;
+  final _searchController = TextEditingController();
+
+  static const _stages = [
+    'NEW',
+    'CONTACTED',
+    'INTERESTED',
+    'DEMO',
+    'NEGOTIATION',
+    'WON',
+    'LOST',
+  ];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<LeadModel> _filterLeads(List<LeadModel> leads) {
+    var filtered = leads;
+
+    // Stage filter
+    if (_selectedStage != null) {
+      filtered = filtered
+          .where((l) => l.stage.toUpperCase() == _selectedStage)
+          .toList();
+    }
+
+    // Search filter
+    if (_searchQuery.isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      filtered = filtered.where((lead) {
+        final name = '${lead.firstName} ${lead.lastName}'.toLowerCase();
+        final phone = (lead.phone ?? '').toLowerCase();
+        final email = (lead.email ?? '').toLowerCase();
+        final company = (lead.company ?? '').toLowerCase();
+        final stage = lead.stage.toLowerCase();
+        return name.contains(q) ||
+            phone.contains(q) ||
+            email.contains(q) ||
+            company.contains(q) ||
+            stage.contains(q);
+      }).toList();
+    }
+
+    return filtered;
+  }
 
   String _getMonthName(int month) {
     final months = [
@@ -25,7 +82,7 @@ class PipelineBoardPage extends StatelessWidget {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return months[month - 1];
   }
@@ -33,8 +90,8 @@ class PipelineBoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<LeadBloc>()
-        ..add(const LeadEvent.fetchLeads(limit: 200)),
+      create: (context) =>
+          getIt<LeadBloc>()..add(const LeadEvent.fetchLeads(limit: 200)),
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: BlocBuilder<LeadBloc, LeadState>(
@@ -44,25 +101,33 @@ class PipelineBoardPage extends StatelessWidget {
               error: (message) => Center(
                 child: Text(
                   'Error: $message',
-                  style:  TextStyle(color: AppColors.error),
+                  style: TextStyle(color: AppColors.error),
                 ),
               ),
               loaded: (leads, total, skip, limit) {
+                // Filter leads by search query
+                final filtered = _filterLeads(leads);
                 // Group leads by stage
-                final newLeads = leads
+                final newLeads = filtered
                     .where((l) => l.stage.toUpperCase() == 'NEW')
                     .toList();
-                final contactedLeads = leads
+                final contactedLeads = filtered
                     .where((l) => l.stage.toUpperCase() == 'CONTACTED')
                     .toList();
-                final interestedLeads = leads
+                final interestedLeads = filtered
                     .where((l) => l.stage.toUpperCase() == 'INTERESTED')
                     .toList();
-                final demoLeads = leads
+                final demoLeads = filtered
                     .where((l) => l.stage.toUpperCase() == 'DEMO')
                     .toList();
-                final negotiationLeads = leads
+                final negotiationLeads = filtered
                     .where((l) => l.stage.toUpperCase() == 'NEGOTIATION')
+                    .toList();
+                final wonLeads = filtered
+                    .where((l) => l.stage.toUpperCase() == 'WON')
+                    .toList();
+                final lostLeads = filtered
+                    .where((l) => l.stage.toUpperCase() == 'LOST')
                     .toList();
 
                 return SingleChildScrollView(
@@ -79,18 +144,18 @@ class PipelineBoardPage extends StatelessWidget {
                             children: [
                               Text(
                                 'Pipeline',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall
+                                style: Theme.of(context).textTheme.headlineSmall
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.textPrimary,
                                     ),
                               ),
                               const SizedBox(height: 4),
-                               Text(
+                              Text(
                                 'Track your leads in pipeline stages.',
-                                style: TextStyle(color: AppColors.textSecondary),
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
                             ],
                           ),
@@ -108,7 +173,7 @@ class PipelineBoardPage extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     const SizedBox(width: 12),
-                                     Icon(
+                                    Icon(
                                       Iconsax.search_normal,
                                       color: AppColors.textSecondary,
                                       size: 20,
@@ -116,11 +181,17 @@ class PipelineBoardPage extends StatelessWidget {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: TextField(
-                                        style:  TextStyle(
+                                        controller: _searchController,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _searchQuery = value;
+                                          });
+                                        },
+                                        style: TextStyle(
                                           fontSize: 14,
                                           color: AppColors.textPrimary,
                                         ),
-                                        decoration:  InputDecoration(
+                                        decoration: InputDecoration(
                                           hintText: 'Search leads...',
                                           hintStyle: TextStyle(
                                             color: AppColors.textSecondary,
@@ -139,28 +210,184 @@ class PipelineBoardPage extends StatelessWidget {
                               // Filter Button
                               Container(
                                 height: 40,
-                                padding:
-                                     EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
-                                  color: AppColors.surface,
+                                  color: _selectedStage != null
+                                      ? AppColors.primary.withValues(
+                                          alpha: 0.08,
+                                        )
+                                      : AppColors.surface,
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: AppColors.border),
+                                  border: Border.all(
+                                    color: _selectedStage != null
+                                        ? AppColors.primary
+                                        : AppColors.border,
+                                  ),
                                 ),
                                 child: Row(
-                                  children:  [
-                                    Icon(
-                                      Iconsax.filter,
-                                      size: 20,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Filters',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.textPrimary,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    PopupMenuButton<String?>(
+                                      onSelected: (value) {
+                                        setState(() {
+                                          _selectedStage = value;
+                                        });
+                                      },
+                                      offset: const Offset(0, 44),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      color: AppColors.surface,
+                                      itemBuilder: (context) {
+                                        Color stageColor(String stage) {
+                                          switch (stage) {
+                                            case 'NEW':
+                                              return AppColors.iconBlue;
+                                            case 'CONTACTED':
+                                              return AppColors.iconGreen;
+                                            case 'INTERESTED':
+                                              return AppColors.iconOrange;
+                                            case 'DEMO':
+                                              return AppColors.iconPurple;
+                                            case 'NEGOTIATION':
+                                              return const Color(0xFFE11D48);
+                                            case 'WON':
+                                              return AppColors.success;
+                                            case 'LOST':
+                                              return AppColors.error;
+                                            default:
+                                              return AppColors.textSecondary;
+                                          }
+                                        }
+
+                                        return [
+                                          PopupMenuItem<String?>(
+                                            value: null,
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Iconsax.layer,
+                                                  size: 18,
+                                                  color: _selectedStage == null
+                                                      ? AppColors.primary
+                                                      : AppColors.textSecondary,
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Text(
+                                                  'All Stages',
+                                                  style: TextStyle(
+                                                    fontWeight:
+                                                        _selectedStage == null
+                                                        ? FontWeight.w600
+                                                        : FontWeight.w400,
+                                                    color:
+                                                        _selectedStage == null
+                                                        ? AppColors.primary
+                                                        : AppColors.textPrimary,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const PopupMenuDivider(),
+                                          ..._stages.map(
+                                            (stage) => PopupMenuItem<String?>(
+                                              value: stage,
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    width: 8,
+                                                    height: 8,
+                                                    decoration: BoxDecoration(
+                                                      color: stageColor(stage),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    stage[0] +
+                                                        stage
+                                                            .substring(1)
+                                                            .toLowerCase(),
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          _selectedStage ==
+                                                              stage
+                                                          ? FontWeight.w600
+                                                          : FontWeight.w400,
+                                                      color:
+                                                          _selectedStage ==
+                                                              stage
+                                                          ? AppColors.primary
+                                                          : AppColors
+                                                                .textPrimary,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ];
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 16,
+                                          right: _selectedStage != null
+                                              ? 8
+                                              : 16,
+                                          top: 8,
+                                          bottom: 8,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Iconsax.filter,
+                                              size: 20,
+                                              color: _selectedStage != null
+                                                  ? AppColors.primary
+                                                  : AppColors.textSecondary,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              _selectedStage != null
+                                                  ? _selectedStage![0] +
+                                                        _selectedStage!
+                                                            .substring(1)
+                                                            .toLowerCase()
+                                                  : 'Filters',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: _selectedStage != null
+                                                    ? AppColors.primary
+                                                    : AppColors.textPrimary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
+                                    if (_selectedStage != null)
+                                      GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () {
+                                          setState(() {
+                                            _selectedStage = null;
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 16,
+                                            left: 4,
+                                            top: 8,
+                                            bottom: 8,
+                                          ),
+                                          child: Icon(
+                                            Icons.close,
+                                            size: 16,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ),
@@ -222,6 +449,24 @@ class PipelineBoardPage extends StatelessWidget {
                                 const Color(0xFFFCE7F3),
                                 negotiationLeads,
                               ),
+                              const SizedBox(width: 16),
+                              _buildKanbanColumn(
+                                context,
+                                'Won (${wonLeads.length})',
+                                'WON',
+                                AppColors.success,
+                                AppColors.iconBgGreen,
+                                wonLeads,
+                              ),
+                              const SizedBox(width: 16),
+                              _buildKanbanColumn(
+                                context,
+                                'Lost (${lostLeads.length})',
+                                'LOST',
+                                AppColors.error,
+                                const Color(0xFFFCE7F3),
+                                lostLeads,
+                              ),
                             ],
                           ),
                         ),
@@ -250,8 +495,8 @@ class PipelineBoardPage extends StatelessWidget {
       onAccept: (lead) {
         if (lead.stage.toUpperCase() != stageKey) {
           context.read<LeadBloc>().add(
-                LeadEvent.updateLead(lead.id, {'stage': stageKey}),
-              );
+            LeadEvent.updateLead(lead.id, {'stage': stageKey}),
+          );
         }
       },
       builder: (context, candidateData, rejectedData) {
@@ -259,7 +504,7 @@ class PipelineBoardPage extends StatelessWidget {
         return Container(
           width: 280,
           decoration: BoxDecoration(
-            color: isOver ? bgColor.withOpacity(0.3) : AppColors.surface,
+            color: isOver ? bgColor.withValues(alpha: 0.3) : AppColors.surface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isOver ? color : AppColors.border,
@@ -284,7 +529,7 @@ class PipelineBoardPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                     Icon(
+                    Icon(
                       Iconsax.more,
                       color: AppColors.textSecondary,
                       size: 20,
@@ -292,7 +537,7 @@ class PipelineBoardPage extends StatelessWidget {
                   ],
                 ),
               ),
-               Divider(height: 1, color: AppColors.border),
+              Divider(height: 1, color: AppColors.border),
               // Cards
               Expanded(
                 child: ListView(
@@ -304,10 +549,10 @@ class PipelineBoardPage extends StatelessWidget {
                     InkWell(
                       onTap: () => context.go('/leads'),
                       child: Padding(
-                        padding:  EdgeInsets.symmetric(vertical: 8),
+                        padding: EdgeInsets.symmetric(vertical: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children:  [
+                          children: [
                             Icon(
                               Iconsax.add,
                               color: AppColors.iconBlue,
@@ -339,8 +584,7 @@ class PipelineBoardPage extends StatelessWidget {
   Widget _buildLeadCard(BuildContext context, LeadModel lead) {
     final name = '${lead.firstName} ${lead.lastName}';
     final city = lead.company ?? 'Individual';
-    final date =
-        '${lead.createdAt.day} ${_getMonthName(lead.createdAt.month)}';
+    final date = '${lead.createdAt.day} ${_getMonthName(lead.createdAt.month)}';
 
     final cardChild = Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -362,7 +606,7 @@ class PipelineBoardPage extends StatelessWidget {
         children: [
           Text(
             name,
-            style:  TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
               fontSize: 14,
@@ -374,17 +618,11 @@ class PipelineBoardPage extends StatelessWidget {
             children: [
               Text(
                 city,
-                style:  TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
               ),
               Text(
                 date,
-                style:  TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
               ),
             ],
           ),
@@ -398,16 +636,10 @@ class PipelineBoardPage extends StatelessWidget {
         color: Colors.transparent,
         child: SizedBox(
           width: 250,
-          child: Opacity(
-            opacity: 0.8,
-            child: cardChild,
-          ),
+          child: Opacity(opacity: 0.8, child: cardChild),
         ),
       ),
-      childWhenDragging: Opacity(
-        opacity: 0.4,
-        child: cardChild,
-      ),
+      childWhenDragging: Opacity(opacity: 0.4, child: cardChild),
       child: cardChild,
     );
   }

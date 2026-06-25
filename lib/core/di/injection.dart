@@ -30,54 +30,62 @@ void configureDependencies() => getIt.init();
 // Manual registrations for now, as we don't have the generated file yet
 extension GetItInjectableX on GetIt {
   void init() {
-    this.registerLazySingleton<AuthService>(() => AuthService());
-    this.registerLazySingleton<ApiClient>(() => ApiClient(authService: this()));
-    this.registerLazySingleton<WebSocketService>(() => WebSocketService(authService: this()));
+    registerLazySingleton<AuthService>(() => AuthService());
+    registerLazySingleton<ApiClient>(() => ApiClient(authService: this()));
+    registerLazySingleton<WebSocketService>(
+      () => WebSocketService(authService: this()),
+    );
 
-    this.registerLazySingleton<DashboardRemoteDataSource>(
-        () => DashboardRemoteDataSourceImpl(apiClient: this()));
-    this.registerLazySingleton<DashboardLocalDataSource>(
-        () => DashboardLocalDataSourceImpl());
+    registerLazySingleton<DashboardRemoteDataSource>(
+      () => DashboardRemoteDataSourceImpl(apiClient: this()),
+    );
+    registerLazySingleton<DashboardLocalDataSource>(
+      () => DashboardLocalDataSourceImpl(),
+    );
 
-    this.registerLazySingleton<DashboardRepository>(
+    registerLazySingleton<DashboardRepository>(
       () => DashboardRepositoryImpl(
         remoteDataSource: this(),
         localDataSource: this(),
       ),
     );
 
-    this.registerLazySingleton<GetMetricsUseCase>(() => GetMetricsUseCase(this()));
-    this.registerLazySingleton<GetAlertsUseCase>(() => GetAlertsUseCase(this()));
+    registerLazySingleton<GetMetricsUseCase>(() => GetMetricsUseCase(this()));
+    registerLazySingleton<GetAlertsUseCase>(() => GetAlertsUseCase(this()));
 
-    this.registerFactory<DashboardBloc>(() => DashboardBloc(
-          getMetricsUseCase: this(),
-          getAlertsUseCase: this(),
-          webSocketService: this(),
-        ));
-    
+    registerFactory<DashboardBloc>(
+      () => DashboardBloc(
+        getMetricsUseCase: this(),
+        getAlertsUseCase: this(),
+        webSocketService: this(),
+      ),
+    );
+
     // AuthBloc is a placeholder for now
-    this.registerFactory<AuthBloc>(() => AuthBloc());
+    registerFactory<AuthBloc>(() => AuthBloc());
 
     // Leads
-    this.registerLazySingleton<LeadService>(() => LeadService());
-    this.registerFactory<LeadBloc>(() => LeadBloc(leadService: this()));
+    registerLazySingleton<LeadService>(() => LeadService());
+    registerFactory<LeadBloc>(() => LeadBloc(leadService: this()));
 
     // FollowUps
-    this.registerLazySingleton<FollowUpService>(() => FollowUpService());
-    this.registerFactory<FollowUpBloc>(() => FollowUpBloc(followUpService: this()));
+    registerLazySingleton<FollowUpService>(() => FollowUpService());
+    registerFactory<FollowUpBloc>(() => FollowUpBloc(followUpService: this()));
 
     // Bookings
-    this.registerLazySingleton<BookingService>(() => BookingService());
-    this.registerFactory<BookingBloc>(() => BookingBloc(bookingService: this()));
+    registerLazySingleton<BookingService>(() => BookingService());
+    registerFactory<BookingBloc>(() => BookingBloc(bookingService: this()));
 
     // Itineraries
-    this.registerLazySingleton<ItineraryService>(() => ItineraryService());
-    this.registerFactory<ItineraryBloc>(() => ItineraryBloc(itineraryService: this()));
+    registerLazySingleton<ItineraryService>(() => ItineraryService());
+    registerFactory<ItineraryBloc>(
+      () => ItineraryBloc(itineraryService: this()),
+    );
 
     // Invoices
-    this.registerLazySingleton<InvoiceService>(() => InvoiceService());
+    registerLazySingleton<InvoiceService>(() => InvoiceService());
 
     // Documents
-    this.registerLazySingleton<DocumentService>(() => DocumentService());
+    registerLazySingleton<DocumentService>(() => DocumentService());
   }
 }

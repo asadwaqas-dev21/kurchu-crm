@@ -26,7 +26,14 @@ class Sidebar extends StatelessWidget {
             padding: const EdgeInsets.all(15.0),
             child: Row(
               children: [
-                Icon(Iconsax.send_1, color: AppColors.primary, size: 28),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    'assets/appicon.png',
+                    width: 32,
+                    height: 32,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'KURCHU CRM',
@@ -261,7 +268,7 @@ class Sidebar extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.primary : Colors.transparent,
+          color: isActive ? const Color(0xFF1E1E1E) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
