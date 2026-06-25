@@ -1,7 +1,7 @@
 class ApiConstants {
   static const String baseUrl = 'https://kurchu-crm-backend.onrender.com/api';
   static const String wsUrl =
-      'wss://kurchu-crm-backend.onrender.com/ws/dashboard';
+      'wss://kurchu-crm-backend.onrender.com';
 
   // Auth endpoints
   static const String authRegister = '/auth/register';
