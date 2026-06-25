@@ -1,6 +1,7 @@
 class ApiConstants {
-  static const String baseUrl = 'http://127.0.0.1:3001/api';
-  static const String wsUrl = 'ws://127.0.0.1:3001/ws/dashboard';
+  static const String baseUrl = 'https://kurchu-crm-backend.onrender.com/api';
+  static const String wsUrl =
+      'wss://kurchu-crm-backend.onrender.com/ws/dashboard';
 
   // Auth endpoints
   static const String authRegister = '/auth/register';
@@ -27,7 +28,6 @@ class ApiConstants {
   // Company endpoints
   static const String companyProfile = '/company/profile';
   static const String companyServices = '/company/services';
-
 
   // Timeouts
   static const Duration connectionTimeout = Duration(seconds: 30);
