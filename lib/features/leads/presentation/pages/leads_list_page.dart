@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
-import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_bloc.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_event.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_state.dart';
@@ -68,11 +67,7 @@ class _LeadsListPageState extends State<LeadsListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<LeadBloc>()..add(const LeadEvent.fetchLeads()),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
+    return Scaffold(
             backgroundColor: AppColors.background,
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -680,9 +675,6 @@ class _LeadsListPageState extends State<LeadsListPage> {
               ),
             ),
           );
-        },
-      ),
-    );
   }
 
   DataRow _buildLeadRow(BuildContext context, LeadModel lead) {
@@ -833,6 +825,7 @@ class _LeadsListPageState extends State<LeadsListPage> {
   }
 
   void _showAddLeadDialog(BuildContext context) {
+    final leadBloc = context.read<LeadBloc>();
     final formKey = GlobalKey<FormState>();
     String firstName = '';
     String lastName = '';
@@ -1025,7 +1018,7 @@ class _LeadsListPageState extends State<LeadsListPage> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      context.read<LeadBloc>().add(
+                      leadBloc.add(
                         LeadEvent.addLead({
                           'firstName': firstName,
                           'lastName': lastName,
@@ -1055,6 +1048,7 @@ class _LeadsListPageState extends State<LeadsListPage> {
   }
 
   void _showEditLeadDialog(BuildContext context, LeadModel lead) {
+    final leadBloc = context.read<LeadBloc>();
     final formKey = GlobalKey<FormState>();
     String firstName = lead.firstName;
     String lastName = lead.lastName;
@@ -1261,7 +1255,7 @@ class _LeadsListPageState extends State<LeadsListPage> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      context.read<LeadBloc>().add(
+                      leadBloc.add(
                         LeadEvent.updateLead(lead.id, {
                           'firstName': firstName,
                           'lastName': lastName,
@@ -1291,6 +1285,7 @@ class _LeadsListPageState extends State<LeadsListPage> {
   }
 
   void _showDeleteConfirmation(BuildContext context, LeadModel lead) {
+    final leadBloc = context.read<LeadBloc>();
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -1315,7 +1310,7 @@ class _LeadsListPageState extends State<LeadsListPage> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
               onPressed: () {
-                context.read<LeadBloc>().add(LeadEvent.deleteLead(lead.id));
+                leadBloc.add(LeadEvent.deleteLead(lead.id));
                 Navigator.pop(dialogContext);
               },
               child: const Text(

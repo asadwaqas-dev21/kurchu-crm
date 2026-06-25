@@ -2,14 +2,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:crm_kurchudashboard/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:crm_kurchudashboard/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:crm_kurchudashboard/features/dashboard/presentation/pages/pipeline_board_page.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/pages/leads_list_page.dart';
 import 'package:crm_kurchudashboard/features/follow_ups/presentation/pages/follow_ups_page.dart';
 import 'package:crm_kurchudashboard/features/bookings/presentation/pages/bookings_page.dart';
 import 'package:crm_kurchudashboard/features/finance/presentation/pages/finance_page.dart';
+import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_bloc.dart';
+import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_event.dart';
+import 'package:crm_kurchudashboard/features/follow_ups/presentation/bloc/follow_up_bloc.dart';
+import 'package:crm_kurchudashboard/features/follow_ups/presentation/bloc/follow_up_event.dart';
+import 'package:crm_kurchudashboard/features/bookings/presentation/bloc/booking_bloc.dart';
+import 'package:crm_kurchudashboard/features/bookings/presentation/bloc/booking_event.dart';
 import 'package:crm_kurchudashboard/features/invoices/presentation/pages/invoices_page.dart';
-import 'package:crm_kurchudashboard/features/itineraries/presentation/pages/itineraries_page.dart';
+import 'package:crm_kurchudashboard/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:crm_kurchudashboard/features/documents/presentation/pages/documents_page.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/pages/my_leads_page.dart';
 import 'package:crm_kurchudashboard/features/settings/presentation/pages/settings_page.dart';
@@ -34,8 +41,22 @@ final appRouter = GoRouter(
   routes: [
     GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
     ShellRoute(
-      builder: (context, state, child) => BlocProvider(
-        create: (context) => getIt<DashboardBloc>(),
+      builder: (context, state, child) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => getIt<DashboardBloc>()..add(const DashboardEvent.metricsFetched()),
+          ),
+          BlocProvider(
+            create: (context) => getIt<LeadBloc>()..add(const LeadEvent.fetchLeads()),
+          ),
+          BlocProvider(
+            create: (context) => getIt<FollowUpBloc>()..add(const FollowUpEvent.fetchFollowUps()),
+          ),
+          BlocProvider(
+            create: (context) => getIt<BookingBloc>()..add(const BookingEvent.fetchBookings()),
+          ),
+
+        ],
         child: MainLayout(child: child),
       ),
       routes: [
@@ -69,8 +90,8 @@ final appRouter = GoRouter(
           builder: (context, state) => const InvoicesPage(),
         ),
         GoRoute(
-          path: '/itineraries',
-          builder: (context, state) => const ItinerariesPage(),
+          path: '/calendar',
+          builder: (context, state) => const CalendarPage(),
         ),
         GoRoute(
           path: '/documents',

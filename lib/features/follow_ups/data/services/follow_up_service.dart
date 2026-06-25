@@ -37,4 +37,18 @@ class FollowUpService {
       return null;
     }
   }
+
+  Future<FollowUpModel?> updateFollowUp(String id, Map<String, dynamic> data) async {
+    try {
+      final response = await _apiClient.put(
+        '${ApiConstants.followUps}/$id',
+        data: data,
+      );
+
+      return FollowUpModel.fromJson(response.data['data']['followUp']);
+    } catch (e) {
+      print('Exception in updateFollowUp: $e');
+      return null;
+    }
+  }
 }

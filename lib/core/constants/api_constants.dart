@@ -1,6 +1,6 @@
 class ApiConstants {
-  static const String baseUrl = 'http://localhost:3001/api';
-  static const String wsUrl = 'ws://localhost:3001/ws/dashboard';
+  static const String baseUrl = 'http://127.0.0.1:3001/api';
+  static const String wsUrl = 'ws://127.0.0.1:3001/ws/dashboard';
 
   // Auth endpoints
   static const String authRegister = '/auth/register';
@@ -18,7 +18,7 @@ class ApiConstants {
   static const String leads = '/leads';
   static const String followUps = '/follow-ups';
   static const String bookings = '/bookings';
-  static const String itineraries = '/itineraries';
+
   static const String invoices = '/invoices';
   static const String documents = '/documents';
   static const String dashboardTodayStats = '/dashboard/today-stats';

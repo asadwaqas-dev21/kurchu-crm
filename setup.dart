@@ -19,8 +19,8 @@ class AppColors {
 ''',
     'lib/core/constants/api_constants.dart': '''
 class ApiConstants {
-  static const String baseUrl = 'http://localhost:3001/api';
-  static const String wsUrl = 'ws://localhost:3001/ws/dashboard';
+  static const String baseUrl = 'http://127.0.0.1:3001/api';
+  static const String wsUrl = 'ws://127.0.0.1:3001/ws/dashboard';
 
   // Auth endpoints
   static const String authRegister = '/auth/register';
@@ -597,7 +597,8 @@ class TodayStats {
   }
 }
 ''',
-    'lib/features/dashboard/data/datasources/dashboard_remote_data_source.dart': '''
+    'lib/features/dashboard/data/datasources/dashboard_remote_data_source.dart':
+        '''
 import 'package:crm_kurchudashboard/core/services/api_client.dart';
 import 'package:crm_kurchudashboard/core/constants/api_constants.dart';
 import 'package:crm_kurchudashboard/features/dashboard/data/models/metrics_model.dart';
@@ -690,7 +691,8 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   }
 }
 ''',
-    'lib/features/dashboard/data/datasources/dashboard_local_data_source.dart': '''
+    'lib/features/dashboard/data/datasources/dashboard_local_data_source.dart':
+        '''
 import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:crm_kurchudashboard/features/dashboard/data/models/metrics_model.dart';
@@ -786,7 +788,8 @@ abstract class DashboardRepository {
   Future<Either<Exception, void>> markAlertAsRead(String alertId);
 }
 ''',
-    'lib/features/dashboard/data/repositories/dashboard_repository_impl.dart': '''
+    'lib/features/dashboard/data/repositories/dashboard_repository_impl.dart':
+        '''
 import 'package:dartz/dartz.dart';
 import 'package:crm_kurchudashboard/features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import 'package:crm_kurchudashboard/features/dashboard/data/datasources/dashboard_local_data_source.dart';

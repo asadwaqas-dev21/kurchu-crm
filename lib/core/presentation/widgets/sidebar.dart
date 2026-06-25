@@ -110,12 +110,12 @@ class Sidebar extends StatelessWidget {
                   ),
                   _buildNavItem(
                     context,
-                    icon: Iconsax.map,
-                    label: 'Itineraries',
+                    icon: Iconsax.calendar,
+                    label: 'Calendar',
                     isActive: GoRouterState.of(
                       context,
-                    ).uri.toString().startsWith('/itineraries'),
-                    onTap: () => context.go('/itineraries'),
+                    ).uri.toString().startsWith('/calendar'),
+                    onTap: () => context.go('/calendar'),
                   ),
 
                   const SizedBox(height: 24),

@@ -5,15 +5,20 @@ import 'package:crm_kurchudashboard/features/invoices/data/models/invoice_model.
 
 class InvoiceService {
   ApiClient get _apiClient => getIt<ApiClient>();
+  List<InvoiceModel>? _cachedInvoices;
 
-  Future<List<InvoiceModel>> getInvoices() async {
+  Future<List<InvoiceModel>> getInvoices({bool forceRefresh = false}) async {
+    if (_cachedInvoices != null && !forceRefresh) {
+      return _cachedInvoices!;
+    }
     try {
       final response = await _apiClient.get(ApiConstants.invoices);
       final List<dynamic> rawInvoices = response.data['data']['invoices'] ?? [];
-      return rawInvoices.map((e) => InvoiceModel.fromJson(e)).toList();
+      _cachedInvoices = rawInvoices.map((e) => InvoiceModel.fromJson(e)).toList();
+      return _cachedInvoices!;
     } catch (e) {
       print('Exception in getInvoices: $e');
-      return [];
+      return _cachedInvoices ?? [];
     }
   }
 
@@ -23,7 +28,11 @@ class InvoiceService {
         ApiConstants.invoices,
         data: data,
       );
-      return InvoiceModel.fromJson(response.data['data']['invoice']);
+      final newInvoice = InvoiceModel.fromJson(response.data['data']['invoice']);
+      if (_cachedInvoices != null) {
+        _cachedInvoices!.insert(0, newInvoice);
+      }
+      return newInvoice;
     } catch (e) {
       print('Exception in createInvoice: $e');
       return null;

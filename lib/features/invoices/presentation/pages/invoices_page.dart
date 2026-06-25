@@ -365,8 +365,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
 
 class AddInvoiceDialog extends StatefulWidget {
   final List<InvoiceModel> currentInvoices;
-  const AddInvoiceDialog({required this.currentInvoices, Key? key})
-    : super(key: key);
+  const AddInvoiceDialog({required this.currentInvoices, super.key});
 
   @override
   State<AddInvoiceDialog> createState() => _AddInvoiceDialogState();
@@ -588,10 +587,12 @@ class _AddInvoiceDialogState extends State<AddInvoiceDialog> {
                 style: TextStyle(color: AppColors.textPrimary),
                 keyboardType: TextInputType.number,
                 validator: (val) {
-                  if (val == null || val.isEmpty)
+                  if (val == null || val.isEmpty) {
                     return 'Please enter an invoice amount';
-                  if (double.tryParse(val) == null)
+                  }
+                  if (double.tryParse(val) == null) {
                     return 'Please enter a valid number';
+                  }
                   return null;
                 },
               ),

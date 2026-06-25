@@ -2,9 +2,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
-import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_bloc.dart';
-import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_event.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_state.dart';
 
 class MyLeadsPage extends StatelessWidget {
@@ -100,12 +98,7 @@ class MyLeadsPage extends StatelessWidget {
                   bottom: BorderSide(color: AppColors.border),
                 ),
               ),
-              child: BlocProvider(
-                create: (context) => getIt<LeadBloc>()
-                  ..add(
-                    const LeadEvent.fetchLeads(),
-                  ), // Add filter for assignedTo if needed
-                child: BlocBuilder<LeadBloc, LeadState>(
+              child: BlocBuilder<LeadBloc, LeadState>(
                   builder: (context, state) {
                     return state.maybeWhen(
                       loading: () => const Padding(
@@ -178,7 +171,6 @@ class MyLeadsPage extends StatelessWidget {
                   },
                 ),
               ),
-            ),
           ],
         ),
       ),

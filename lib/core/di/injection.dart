@@ -9,6 +9,7 @@ import 'package:crm_kurchudashboard/features/dashboard/data/repositories/dashboa
 import 'package:crm_kurchudashboard/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:crm_kurchudashboard/features/dashboard/domain/usecases/get_metrics_usecase.dart';
 import 'package:crm_kurchudashboard/features/dashboard/domain/usecases/get_alerts_usecase.dart';
+import 'package:crm_kurchudashboard/features/dashboard/domain/usecases/mark_alert_as_read_usecase.dart';
 import 'package:crm_kurchudashboard/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:crm_kurchudashboard/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:crm_kurchudashboard/features/leads/data/services/lead_service.dart';
@@ -17,8 +18,6 @@ import 'package:crm_kurchudashboard/features/follow_ups/data/services/follow_up_
 import 'package:crm_kurchudashboard/features/follow_ups/presentation/bloc/follow_up_bloc.dart';
 import 'package:crm_kurchudashboard/features/bookings/data/services/booking_service.dart';
 import 'package:crm_kurchudashboard/features/bookings/presentation/bloc/booking_bloc.dart';
-import 'package:crm_kurchudashboard/features/itineraries/data/services/itinerary_service.dart';
-import 'package:crm_kurchudashboard/features/itineraries/presentation/bloc/itinerary_bloc.dart';
 import 'package:crm_kurchudashboard/features/invoices/data/services/invoice_service.dart';
 import 'package:crm_kurchudashboard/features/documents/data/services/document_service.dart';
 
@@ -52,11 +51,13 @@ extension GetItInjectableX on GetIt {
 
     registerLazySingleton<GetMetricsUseCase>(() => GetMetricsUseCase(this()));
     registerLazySingleton<GetAlertsUseCase>(() => GetAlertsUseCase(this()));
+    registerLazySingleton<MarkAlertAsReadUseCase>(() => MarkAlertAsReadUseCase(this()));
 
     registerFactory<DashboardBloc>(
       () => DashboardBloc(
         getMetricsUseCase: this(),
         getAlertsUseCase: this(),
+        markAlertAsReadUseCase: this(),
         webSocketService: this(),
       ),
     );
@@ -76,11 +77,7 @@ extension GetItInjectableX on GetIt {
     registerLazySingleton<BookingService>(() => BookingService());
     registerFactory<BookingBloc>(() => BookingBloc(bookingService: this()));
 
-    // Itineraries
-    registerLazySingleton<ItineraryService>(() => ItineraryService());
-    registerFactory<ItineraryBloc>(
-      () => ItineraryBloc(itineraryService: this()),
-    );
+
 
     // Invoices
     registerLazySingleton<InvoiceService>(() => InvoiceService());

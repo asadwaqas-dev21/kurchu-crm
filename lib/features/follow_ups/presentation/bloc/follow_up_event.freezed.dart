@@ -56,13 +56,14 @@ extension FollowUpEventPatterns on FollowUpEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( FetchFollowUps value)?  fetchFollowUps,TResult Function( AddFollowUp value)?  addFollowUp,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( FetchFollowUps value)?  fetchFollowUps,TResult Function( AddFollowUp value)?  addFollowUp,TResult Function( UpdateFollowUp value)?  updateFollowUp,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started(_that);case FetchFollowUps() when fetchFollowUps != null:
 return fetchFollowUps(_that);case AddFollowUp() when addFollowUp != null:
-return addFollowUp(_that);case _:
+return addFollowUp(_that);case UpdateFollowUp() when updateFollowUp != null:
+return updateFollowUp(_that);case _:
   return orElse();
 
 }
@@ -80,13 +81,14 @@ return addFollowUp(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( FetchFollowUps value)  fetchFollowUps,required TResult Function( AddFollowUp value)  addFollowUp,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( FetchFollowUps value)  fetchFollowUps,required TResult Function( AddFollowUp value)  addFollowUp,required TResult Function( UpdateFollowUp value)  updateFollowUp,}){
 final _that = this;
 switch (_that) {
 case _Started():
 return started(_that);case FetchFollowUps():
 return fetchFollowUps(_that);case AddFollowUp():
-return addFollowUp(_that);case _:
+return addFollowUp(_that);case UpdateFollowUp():
+return updateFollowUp(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -103,13 +105,14 @@ return addFollowUp(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( FetchFollowUps value)?  fetchFollowUps,TResult? Function( AddFollowUp value)?  addFollowUp,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( FetchFollowUps value)?  fetchFollowUps,TResult? Function( AddFollowUp value)?  addFollowUp,TResult? Function( UpdateFollowUp value)?  updateFollowUp,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started(_that);case FetchFollowUps() when fetchFollowUps != null:
 return fetchFollowUps(_that);case AddFollowUp() when addFollowUp != null:
-return addFollowUp(_that);case _:
+return addFollowUp(_that);case UpdateFollowUp() when updateFollowUp != null:
+return updateFollowUp(_that);case _:
   return null;
 
 }
@@ -126,12 +129,13 @@ return addFollowUp(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( bool? isCompleted)?  fetchFollowUps,TResult Function( Map<String, dynamic> data)?  addFollowUp,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( bool? isCompleted)?  fetchFollowUps,TResult Function( Map<String, dynamic> data)?  addFollowUp,TResult Function( String id,  Map<String, dynamic> data)?  updateFollowUp,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case FetchFollowUps() when fetchFollowUps != null:
 return fetchFollowUps(_that.isCompleted);case AddFollowUp() when addFollowUp != null:
-return addFollowUp(_that.data);case _:
+return addFollowUp(_that.data);case UpdateFollowUp() when updateFollowUp != null:
+return updateFollowUp(_that.id,_that.data);case _:
   return orElse();
 
 }
@@ -149,12 +153,13 @@ return addFollowUp(_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( bool? isCompleted)  fetchFollowUps,required TResult Function( Map<String, dynamic> data)  addFollowUp,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( bool? isCompleted)  fetchFollowUps,required TResult Function( Map<String, dynamic> data)  addFollowUp,required TResult Function( String id,  Map<String, dynamic> data)  updateFollowUp,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case FetchFollowUps():
 return fetchFollowUps(_that.isCompleted);case AddFollowUp():
-return addFollowUp(_that.data);case _:
+return addFollowUp(_that.data);case UpdateFollowUp():
+return updateFollowUp(_that.id,_that.data);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -171,12 +176,13 @@ return addFollowUp(_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( bool? isCompleted)?  fetchFollowUps,TResult? Function( Map<String, dynamic> data)?  addFollowUp,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( bool? isCompleted)?  fetchFollowUps,TResult? Function( Map<String, dynamic> data)?  addFollowUp,TResult? Function( String id,  Map<String, dynamic> data)?  updateFollowUp,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case FetchFollowUps() when fetchFollowUps != null:
 return fetchFollowUps(_that.isCompleted);case AddFollowUp() when addFollowUp != null:
-return addFollowUp(_that.data);case _:
+return addFollowUp(_that.data);case UpdateFollowUp() when updateFollowUp != null:
+return updateFollowUp(_that.id,_that.data);case _:
   return null;
 
 }
@@ -347,6 +353,80 @@ class _$AddFollowUpCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? data = null,}) {
   return _then(AddFollowUp(
 null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class UpdateFollowUp implements FollowUpEvent {
+  const UpdateFollowUp(this.id,  Map<String, dynamic> data): _data = data;
+  
+
+ final  String id;
+ final  Map<String, dynamic> _data;
+ Map<String, dynamic> get data {
+  if (_data is EqualUnmodifiableMapView) return _data;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_data);
+}
+
+
+/// Create a copy of FollowUpEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UpdateFollowUpCopyWith<UpdateFollowUp> get copyWith => _$UpdateFollowUpCopyWithImpl<UpdateFollowUp>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateFollowUp&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._data, _data));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_data));
+
+@override
+String toString() {
+  return 'FollowUpEvent.updateFollowUp(id: $id, data: $data)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UpdateFollowUpCopyWith<$Res> implements $FollowUpEventCopyWith<$Res> {
+  factory $UpdateFollowUpCopyWith(UpdateFollowUp value, $Res Function(UpdateFollowUp) _then) = _$UpdateFollowUpCopyWithImpl;
+@useResult
+$Res call({
+ String id, Map<String, dynamic> data
+});
+
+
+
+
+}
+/// @nodoc
+class _$UpdateFollowUpCopyWithImpl<$Res>
+    implements $UpdateFollowUpCopyWith<$Res> {
+  _$UpdateFollowUpCopyWithImpl(this._self, this._then);
+
+  final UpdateFollowUp _self;
+  final $Res Function(UpdateFollowUp) _then;
+
+/// Create a copy of FollowUpEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? id = null,Object? data = null,}) {
+  return _then(UpdateFollowUp(
+null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,
   ));
 }

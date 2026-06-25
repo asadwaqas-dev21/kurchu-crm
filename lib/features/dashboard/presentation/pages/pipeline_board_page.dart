@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
-import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_bloc.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_event.dart';
 import 'package:crm_kurchudashboard/features/leads/presentation/bloc/lead_state.dart';
@@ -89,198 +88,224 @@ class _PipelineBoardPageState extends State<PipelineBoardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt<LeadBloc>()..add(const LeadEvent.fetchLeads(limit: 200)),
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: BlocBuilder<LeadBloc, LeadState>(
-          builder: (context, state) {
-            return state.maybeWhen(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (message) => Center(
-                child: Text(
-                  'Error: $message',
-                  style: TextStyle(color: AppColors.error),
-                ),
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: BlocBuilder<LeadBloc, LeadState>(
+        builder: (context, state) {
+          return state.maybeWhen(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (message) => Center(
+              child: Text(
+                'Error: $message',
+                style: TextStyle(color: AppColors.error),
               ),
-              loaded: (leads, total, skip, limit) {
-                // Filter leads by search query
-                final filtered = _filterLeads(leads);
-                // Group leads by stage
-                final newLeads = filtered
-                    .where((l) => l.stage.toUpperCase() == 'NEW')
-                    .toList();
-                final contactedLeads = filtered
-                    .where((l) => l.stage.toUpperCase() == 'CONTACTED')
-                    .toList();
-                final interestedLeads = filtered
-                    .where((l) => l.stage.toUpperCase() == 'INTERESTED')
-                    .toList();
-                final demoLeads = filtered
-                    .where((l) => l.stage.toUpperCase() == 'DEMO')
-                    .toList();
-                final negotiationLeads = filtered
-                    .where((l) => l.stage.toUpperCase() == 'NEGOTIATION')
-                    .toList();
-                final wonLeads = filtered
-                    .where((l) => l.stage.toUpperCase() == 'WON')
-                    .toList();
-                final lostLeads = filtered
-                    .where((l) => l.stage.toUpperCase() == 'LOST')
-                    .toList();
+            ),
+            loaded: (leads, total, skip, limit) {
+              // Filter leads by search query
+              final filtered = _filterLeads(leads);
+              // Group leads by stage
+              final newLeads = filtered
+                  .where((l) => l.stage.toUpperCase() == 'NEW')
+                  .toList();
+              final contactedLeads = filtered
+                  .where((l) => l.stage.toUpperCase() == 'CONTACTED')
+                  .toList();
+              final interestedLeads = filtered
+                  .where((l) => l.stage.toUpperCase() == 'INTERESTED')
+                  .toList();
+              final demoLeads = filtered
+                  .where((l) => l.stage.toUpperCase() == 'DEMO')
+                  .toList();
+              final negotiationLeads = filtered
+                  .where((l) => l.stage.toUpperCase() == 'NEGOTIATION')
+                  .toList();
+              final wonLeads = filtered
+                  .where((l) => l.stage.toUpperCase() == 'WON')
+                  .toList();
+              final lostLeads = filtered
+                  .where((l) => l.stage.toUpperCase() == 'LOST')
+                  .toList();
 
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Pipeline',
-                                style: Theme.of(context).textTheme.headlineSmall
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.textPrimary,
-                                    ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Track your leads in pipeline stages.',
-                                style: TextStyle(
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              // Search Bar
-                              Container(
-                                width: 250,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: AppColors.surface,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: AppColors.border),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 12),
-                                    Icon(
-                                      Iconsax.search_normal,
-                                      color: AppColors.textSecondary,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _searchController,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _searchQuery = value;
-                                          });
-                                        },
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: AppColors.textPrimary,
-                                        ),
-                                        decoration: InputDecoration(
-                                          hintText: 'Search leads...',
-                                          hintStyle: TextStyle(
-                                            color: AppColors.textSecondary,
-                                            fontSize: 14,
-                                          ),
-                                          border: InputBorder.none,
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.zero,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              // Filter Button
-                              Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: _selectedStage != null
-                                      ? AppColors.primary.withValues(
-                                          alpha: 0.08,
-                                        )
-                                      : AppColors.surface,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: _selectedStage != null
-                                        ? AppColors.primary
-                                        : AppColors.border,
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Pipeline',
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textPrimary,
                                   ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    PopupMenuButton<String?>(
-                                      onSelected: (value) {
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Track your leads in pipeline stages.',
+                              style: TextStyle(color: AppColors.textSecondary),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            // Search Bar
+                            Container(
+                              width: 250,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: AppColors.surface,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 12),
+                                  Icon(
+                                    Iconsax.search_normal,
+                                    color: AppColors.textSecondary,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _searchController,
+                                      onChanged: (value) {
                                         setState(() {
-                                          _selectedStage = value;
+                                          _searchQuery = value;
                                         });
                                       },
-                                      offset: const Offset(0, 44),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.textPrimary,
                                       ),
-                                      color: AppColors.surface,
-                                      itemBuilder: (context) {
-                                        Color stageColor(String stage) {
-                                          switch (stage) {
-                                            case 'NEW':
-                                              return AppColors.iconBlue;
-                                            case 'CONTACTED':
-                                              return AppColors.iconGreen;
-                                            case 'INTERESTED':
-                                              return AppColors.iconOrange;
-                                            case 'DEMO':
-                                              return AppColors.iconPurple;
-                                            case 'NEGOTIATION':
-                                              return const Color(0xFFE11D48);
-                                            case 'WON':
-                                              return AppColors.success;
-                                            case 'LOST':
-                                              return AppColors.error;
-                                            default:
-                                              return AppColors.textSecondary;
-                                          }
+                                      decoration: InputDecoration(
+                                        hintText: 'Search leads...',
+                                        hintStyle: TextStyle(
+                                          color: AppColors.textSecondary,
+                                          fontSize: 14,
+                                        ),
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            // Filter Button
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: _selectedStage != null
+                                    ? AppColors.primary.withValues(alpha: 0.08)
+                                    : AppColors.surface,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: _selectedStage != null
+                                      ? AppColors.primary
+                                      : AppColors.border,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  PopupMenuButton<String?>(
+                                    onSelected: (value) {
+                                      setState(() {
+                                        _selectedStage = value;
+                                      });
+                                    },
+                                    offset: const Offset(0, 44),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    color: AppColors.surface,
+                                    itemBuilder: (context) {
+                                      Color stageColor(String stage) {
+                                        switch (stage) {
+                                          case 'NEW':
+                                            return AppColors.iconBlue;
+                                          case 'CONTACTED':
+                                            return AppColors.iconGreen;
+                                          case 'INTERESTED':
+                                            return AppColors.iconOrange;
+                                          case 'DEMO':
+                                            return AppColors.iconPurple;
+                                          case 'NEGOTIATION':
+                                            return const Color(0xFFE11D48);
+                                          case 'WON':
+                                            return AppColors.success;
+                                          case 'LOST':
+                                            return AppColors.error;
+                                          default:
+                                            return AppColors.textSecondary;
                                         }
+                                      }
 
-                                        return [
-                                          PopupMenuItem<String?>(
-                                            value: null,
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Iconsax.layer,
-                                                  size: 18,
+                                      return [
+                                        PopupMenuItem<String?>(
+                                          value: null,
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Iconsax.layer,
+                                                size: 18,
+                                                color: _selectedStage == null
+                                                    ? AppColors.primary
+                                                    : AppColors.textSecondary,
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Text(
+                                                'All Stages',
+                                                style: TextStyle(
+                                                  fontWeight:
+                                                      _selectedStage == null
+                                                      ? FontWeight.w600
+                                                      : FontWeight.w400,
                                                   color: _selectedStage == null
                                                       ? AppColors.primary
-                                                      : AppColors.textSecondary,
+                                                      : AppColors.textPrimary,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const PopupMenuDivider(),
+                                        ..._stages.map(
+                                          (stage) => PopupMenuItem<String?>(
+                                            value: stage,
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 8,
+                                                  height: 8,
+                                                  decoration: BoxDecoration(
+                                                    color: stageColor(stage),
+                                                    shape: BoxShape.circle,
+                                                  ),
                                                 ),
                                                 const SizedBox(width: 10),
                                                 Text(
-                                                  'All Stages',
+                                                  stage[0] +
+                                                      stage
+                                                          .substring(1)
+                                                          .toLowerCase(),
                                                   style: TextStyle(
                                                     fontWeight:
-                                                        _selectedStage == null
+                                                        _selectedStage == stage
                                                         ? FontWeight.w600
                                                         : FontWeight.w400,
                                                     color:
-                                                        _selectedStage == null
+                                                        _selectedStage == stage
                                                         ? AppColors.primary
                                                         : AppColors.textPrimary,
                                                   ),
@@ -288,197 +313,157 @@ class _PipelineBoardPageState extends State<PipelineBoardPage> {
                                               ],
                                             ),
                                           ),
-                                          const PopupMenuDivider(),
-                                          ..._stages.map(
-                                            (stage) => PopupMenuItem<String?>(
-                                              value: stage,
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    width: 8,
-                                                    height: 8,
-                                                    decoration: BoxDecoration(
-                                                      color: stageColor(stage),
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Text(
-                                                    stage[0] +
-                                                        stage
-                                                            .substring(1)
-                                                            .toLowerCase(),
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          _selectedStage ==
-                                                              stage
-                                                          ? FontWeight.w600
-                                                          : FontWeight.w400,
-                                                      color:
-                                                          _selectedStage ==
-                                                              stage
-                                                          ? AppColors.primary
-                                                          : AppColors
-                                                                .textPrimary,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                        ),
+                                      ];
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 16,
+                                        right: _selectedStage != null ? 8 : 16,
+                                        top: 8,
+                                        bottom: 8,
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Iconsax.filter,
+                                            size: 20,
+                                            color: _selectedStage != null
+                                                ? AppColors.primary
+                                                : AppColors.textSecondary,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            _selectedStage != null
+                                                ? _selectedStage![0] +
+                                                      _selectedStage!
+                                                          .substring(1)
+                                                          .toLowerCase()
+                                                : 'Filters',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: _selectedStage != null
+                                                  ? AppColors.primary
+                                                  : AppColors.textPrimary,
                                             ),
                                           ),
-                                        ];
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  if (_selectedStage != null)
+                                    GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedStage = null;
+                                        });
                                       },
                                       child: Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 16,
-                                          right: _selectedStage != null
-                                              ? 8
-                                              : 16,
+                                        padding: const EdgeInsets.only(
+                                          right: 16,
+                                          left: 4,
                                           top: 8,
                                           bottom: 8,
                                         ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              Iconsax.filter,
-                                              size: 20,
-                                              color: _selectedStage != null
-                                                  ? AppColors.primary
-                                                  : AppColors.textSecondary,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              _selectedStage != null
-                                                  ? _selectedStage![0] +
-                                                        _selectedStage!
-                                                            .substring(1)
-                                                            .toLowerCase()
-                                                  : 'Filters',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                color: _selectedStage != null
-                                                    ? AppColors.primary
-                                                    : AppColors.textPrimary,
-                                              ),
-                                            ),
-                                          ],
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 16,
+                                          color: AppColors.primary,
                                         ),
                                       ),
                                     ),
-                                    if (_selectedStage != null)
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () {
-                                          setState(() {
-                                            _selectedStage = null;
-                                          });
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                            right: 16,
-                                            left: 4,
-                                            top: 8,
-                                            bottom: 8,
-                                          ),
-                                          child: Icon(
-                                            Icons.close,
-                                            size: 16,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
 
-                      // Kanban Board
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height - 180,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildKanbanColumn(
-                                context,
-                                'New (${newLeads.length})',
-                                'NEW',
-                                AppColors.iconBlue,
-                                AppColors.iconBgBlue,
-                                newLeads,
-                              ),
-                              const SizedBox(width: 16),
-                              _buildKanbanColumn(
-                                context,
-                                'Contacted (${contactedLeads.length})',
-                                'CONTACTED',
-                                AppColors.iconGreen,
-                                AppColors.iconBgGreen,
-                                contactedLeads,
-                              ),
-                              const SizedBox(width: 16),
-                              _buildKanbanColumn(
-                                context,
-                                'Interested (${interestedLeads.length})',
-                                'INTERESTED',
-                                AppColors.iconOrange,
-                                AppColors.iconBgOrange,
-                                interestedLeads,
-                              ),
-                              const SizedBox(width: 16),
-                              _buildKanbanColumn(
-                                context,
-                                'Demo (${demoLeads.length})',
-                                'DEMO',
-                                AppColors.iconPurple,
-                                AppColors.iconBgPurple,
-                                demoLeads,
-                              ),
-                              const SizedBox(width: 16),
-                              _buildKanbanColumn(
-                                context,
-                                'Negotiation (${negotiationLeads.length})',
-                                'NEGOTIATION',
-                                const Color(0xFFE11D48),
-                                const Color(0xFFFCE7F3),
-                                negotiationLeads,
-                              ),
-                              const SizedBox(width: 16),
-                              _buildKanbanColumn(
-                                context,
-                                'Won (${wonLeads.length})',
-                                'WON',
-                                AppColors.success,
-                                AppColors.iconBgGreen,
-                                wonLeads,
-                              ),
-                              const SizedBox(width: 16),
-                              _buildKanbanColumn(
-                                context,
-                                'Lost (${lostLeads.length})',
-                                'LOST',
-                                AppColors.error,
-                                const Color(0xFFFCE7F3),
-                                lostLeads,
-                              ),
-                            ],
-                          ),
+                    // Kanban Board
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height - 180,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildKanbanColumn(
+                              context,
+                              'New (${newLeads.length})',
+                              'NEW',
+                              AppColors.iconBlue,
+                              AppColors.iconBgBlue,
+                              newLeads,
+                            ),
+                            const SizedBox(width: 16),
+                            _buildKanbanColumn(
+                              context,
+                              'Contacted (${contactedLeads.length})',
+                              'CONTACTED',
+                              AppColors.iconGreen,
+                              AppColors.iconBgGreen,
+                              contactedLeads,
+                            ),
+                            const SizedBox(width: 16),
+                            _buildKanbanColumn(
+                              context,
+                              'Interested (${interestedLeads.length})',
+                              'INTERESTED',
+                              AppColors.iconOrange,
+                              AppColors.iconBgOrange,
+                              interestedLeads,
+                            ),
+                            const SizedBox(width: 16),
+                            _buildKanbanColumn(
+                              context,
+                              'Demo (${demoLeads.length})',
+                              'DEMO',
+                              AppColors.iconPurple,
+                              AppColors.iconBgPurple,
+                              demoLeads,
+                            ),
+                            const SizedBox(width: 16),
+                            _buildKanbanColumn(
+                              context,
+                              'Negotiation (${negotiationLeads.length})',
+                              'NEGOTIATION',
+                              const Color(0xFFE11D48),
+                              const Color(0xFFFCE7F3),
+                              negotiationLeads,
+                            ),
+                            const SizedBox(width: 16),
+                            _buildKanbanColumn(
+                              context,
+                              'Won (${wonLeads.length})',
+                              'WON',
+                              AppColors.success,
+                              AppColors.iconBgGreen,
+                              wonLeads,
+                            ),
+                            const SizedBox(width: 16),
+                            _buildKanbanColumn(
+                              context,
+                              'Lost (${lostLeads.length})',
+                              'LOST',
+                              AppColors.error,
+                              const Color(0xFFFCE7F3),
+                              lostLeads,
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                );
-              },
-              orElse: () => const SizedBox(),
-            );
-          },
-        ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            orElse: () => const SizedBox(),
+          );
+        },
       ),
     );
   }

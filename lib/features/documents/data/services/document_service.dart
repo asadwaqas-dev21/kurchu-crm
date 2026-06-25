@@ -5,15 +5,26 @@ import 'package:crm_kurchudashboard/features/documents/data/models/document_mode
 
 class DocumentService {
   ApiClient get _apiClient => getIt<ApiClient>();
+  List<DocumentModel>? _cachedDocuments;
 
-  Future<List<DocumentModel>> getDocuments() async {
+  List<DocumentModel>? get cachedDocuments => _cachedDocuments;
+
+  void clearCache() {
+    _cachedDocuments = null;
+  }
+
+  Future<List<DocumentModel>> getDocuments({bool forceRefresh = false}) async {
+    if (_cachedDocuments != null && !forceRefresh) {
+      return _cachedDocuments!;
+    }
     try {
       final response = await _apiClient.get(ApiConstants.documents);
       final List<dynamic> rawDocs = response.data['data']['documents'] ?? [];
-      return rawDocs.map((e) => DocumentModel.fromJson(e)).toList();
+      _cachedDocuments = rawDocs.map((e) => DocumentModel.fromJson(e)).toList();
+      return _cachedDocuments!;
     } catch (e) {
       print('Exception in getDocuments: $e');
-      return [];
+      return _cachedDocuments ?? [];
     }
   }
 
@@ -23,7 +34,11 @@ class DocumentService {
         ApiConstants.documents,
         data: data,
       );
-      return DocumentModel.fromJson(response.data['data']['document']);
+      final newDoc = DocumentModel.fromJson(response.data['data']['document']);
+      if (_cachedDocuments != null) {
+        _cachedDocuments!.insert(0, newDoc);
+      }
+      return newDoc;
     } catch (e) {
       print('Exception in createDocument: $e');
       return null;
@@ -33,6 +48,9 @@ class DocumentService {
   Future<bool> deleteDocument(String id) async {
     try {
       await _apiClient.delete('${ApiConstants.documents}/$id');
+      if (_cachedDocuments != null) {
+        _cachedDocuments!.removeWhere((element) => element.id == id);
+      }
       return true;
     } catch (e) {
       print('Exception in deleteDocument: $e');

@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:crm_kurchudashboard/features/dashboard/domain/usecases/get_metrics_usecase.dart';
 import 'package:crm_kurchudashboard/features/dashboard/domain/usecases/get_alerts_usecase.dart';
+import 'package:crm_kurchudashboard/features/dashboard/domain/usecases/mark_alert_as_read_usecase.dart';
 import 'package:crm_kurchudashboard/features/dashboard/domain/entities/metrics.dart';
 import 'package:crm_kurchudashboard/features/dashboard/domain/entities/alert.dart';
 import 'package:crm_kurchudashboard/features/dashboard/domain/entities/today_stats.dart';
@@ -11,16 +13,19 @@ import 'dashboard_state.dart';
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final GetMetricsUseCase getMetricsUseCase;
   final GetAlertsUseCase getAlertsUseCase;
+  final MarkAlertAsReadUseCase markAlertAsReadUseCase;
   final WebSocketService webSocketService;
 
   DashboardBloc({
     required this.getMetricsUseCase,
     required this.getAlertsUseCase,
+    required this.markAlertAsReadUseCase,
     required this.webSocketService,
   }) : super(const DashboardState.initial()) {
     on<MetricsFetched>(_onMetricsFetched);
     on<AlertsFetched>(_onAlertsFetched);
     on<RefreshRequested>(_onRefreshRequested);
+    on<AlertMarkedAsRead>(_onAlertMarkedAsRead);
     on<MetricsUpdatedFromWebSocket>(_onMetricsUpdatedFromWebSocket);
     on<AlertReceivedFromWebSocket>(_onAlertReceivedFromWebSocket);
     on<WebSocketConnected>(_onWebSocketConnected);
@@ -110,6 +115,41 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (state is Loaded) {
       final currentState = state as Loaded;
       emit(currentState.copyWith(isWebSocketConnected: true));
+    }
+  }
+
+  Future<void> _onAlertMarkedAsRead(
+    AlertMarkedAsRead event,
+    Emitter<DashboardState> emit,
+  ) async {
+    if (state is Loaded) {
+      final currentState = state as Loaded;
+      
+      final updatedAlerts = currentState.alerts.map((alert) {
+        if (alert.id == event.alertId) {
+          return Alert(
+            id: alert.id,
+            type: alert.type,
+            title: alert.title,
+            message: alert.message,
+            severity: alert.severity,
+            isRead: true,
+            readAt: DateTime.now().toIso8601String(),
+            createdAt: alert.createdAt,
+          );
+        }
+        return alert;
+      }).toList();
+      
+      emit(currentState.copyWith(alerts: updatedAlerts));
+
+      final result = await markAlertAsReadUseCase(event.alertId);
+      result.fold(
+        (failure) {
+          debugPrint('Failed to mark alert as read on backend: $failure');
+        },
+        (_) => null,
+      );
     }
   }
 

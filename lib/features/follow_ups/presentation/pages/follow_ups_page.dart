@@ -29,12 +29,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt<FollowUpBloc>()..add(const FollowUpEvent.fetchFollowUps()),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
+    return Scaffold(
             backgroundColor: AppColors.background,
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -171,9 +166,6 @@ class _FollowUpsPageState extends State<FollowUpsPage>
               ),
             ),
           );
-        },
-      ),
-    );
   }
 
   Widget _buildFollowUpList(List<FollowUpModel> followUps) {
@@ -246,6 +238,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
   }
 
   void _showAddFollowUpDialog(BuildContext context) {
+    final followUpBloc = context.read<FollowUpBloc>();
     final formKey = GlobalKey<FormState>();
     String? selectedLeadId;
     String type = 'CALL';
@@ -360,7 +353,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
                 if (selectedLeadId == null) return;
                 if (formKey.currentState!.validate()) {
                   formKey.currentState!.save();
-                  context.read<FollowUpBloc>().add(
+                  followUpBloc.add(
                     FollowUpEvent.addFollowUp({
                       'leadId': selectedLeadId,
                       'type': type,

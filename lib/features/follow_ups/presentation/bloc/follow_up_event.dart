@@ -7,4 +7,5 @@ class FollowUpEvent with _$FollowUpEvent {
   const factory FollowUpEvent.started() = _Started;
   const factory FollowUpEvent.fetchFollowUps({bool? isCompleted}) = FetchFollowUps;
   const factory FollowUpEvent.addFollowUp(Map<String, dynamic> data) = AddFollowUp;
+  const factory FollowUpEvent.updateFollowUp(String id, Map<String, dynamic> data) = UpdateFollowUp;
 }

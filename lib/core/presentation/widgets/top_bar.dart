@@ -7,6 +7,7 @@ import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
 import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/core/services/api_client.dart';
 import 'package:crm_kurchudashboard/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:crm_kurchudashboard/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:crm_kurchudashboard/features/dashboard/presentation/bloc/dashboard_state.dart';
 
 class TopBar extends StatefulWidget {
@@ -404,43 +405,225 @@ class _TopBarState extends State<TopBar> {
 
               const SizedBox(width: 16),
 
-              // Notification Bell with unread badge count
-              Stack(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Iconsax.notification,
-                      color: AppColors.textPrimary,
+              // Notification Bell with real dropdown menu and unread badge count
+              MenuAnchor(
+                style: MenuStyle(
+                  backgroundColor: WidgetStateProperty.all(AppColors.surface),
+                  surfaceTintColor: WidgetStateProperty.all(AppColors.surface),
+                  elevation: WidgetStateProperty.all(8),
+                  padding: WidgetStateProperty.all(EdgeInsets.zero),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: AppColors.border),
                     ),
-                    onPressed: () {
-                      // Navigate to dashboard/notifications if needed
-                    },
                   ),
-                  if (unreadCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: AppColors.error,
-                          shape: BoxShape.circle,
+                ),
+                builder: (context, controller, child) {
+                  return Stack(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Iconsax.notification,
+                          color: AppColors.textPrimary,
                         ),
-                        constraints: const BoxConstraints(
-                          minWidth: 16,
-                          minHeight: 16,
-                        ),
-                        child: Text(
-                          '$unreadCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        onPressed: () {
+                          if (controller.isOpen) {
+                            controller.close();
+                          } else {
+                            controller.open();
+                          }
+                        },
                       ),
+                      if (unreadCount > 0)
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: IgnorePointer(
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: AppColors.error,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              child: Text(
+                                '$unreadCount',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+                menuChildren: [
+                  Container(
+                    width: 360,
+                    constraints: const BoxConstraints(maxHeight: 480),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Dropdown Header
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Notifications',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  if (unreadCount > 0) ...[
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.error.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        '$unreadCount unread',
+                                        style: TextStyle(
+                                          color: AppColors.error,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(height: 1, thickness: 1),
+                        
+                        // Dropdown Body
+                        if (alerts.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Iconsax.notification_status,
+                                  size: 40,
+                                  color: AppColors.textSecondary.withValues(alpha: 0.5),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'No notifications yet',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: AppColors.textSecondary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          Flexible(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  ...alerts.map((alert) {
+                                    final isUnread = !alert.isRead;
+                                    
+                                    // Severity icon and color
+                                    IconData severityIcon = Iconsax.info_circle;
+                                    Color severityColor = AppColors.primary;
+                                    if (alert.severity == 'WARNING') {
+                                      severityIcon = Iconsax.warning_2;
+                                      severityColor = AppColors.warning;
+                                    } else if (alert.severity == 'ERROR' || alert.severity == 'CRITICAL') {
+                                      severityIcon = Iconsax.close_circle;
+                                      severityColor = AppColors.error;
+                                    }
+                                    
+                                    return Container(
+                                      color: isUnread 
+                                          ? AppColors.primary.withValues(alpha: 0.03) 
+                                          : Colors.transparent,
+                                      child: ListTile(
+                                        contentPadding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0,
+                                          vertical: 8.0,
+                                        ),
+                                        leading: CircleAvatar(
+                                          radius: 18,
+                                          backgroundColor: severityColor.withValues(alpha: 0.1),
+                                          child: Icon(
+                                            severityIcon,
+                                            size: 18,
+                                            color: severityColor,
+                                          ),
+                                        ),
+                                        title: Text(
+                                          alert.title,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: isUnread ? FontWeight.bold : FontWeight.w500,
+                                            color: AppColors.textPrimary,
+                                          ),
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              alert.message,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: AppColors.textSecondary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        trailing: isUnread
+                                            ? IconButton(
+                                                icon: Icon(
+                                                  Icons.check_circle_outline,
+                                                  size: 20,
+                                                  color: AppColors.primary,
+                                                ),
+                                                tooltip: 'Mark as read',
+                                                onPressed: () {
+                                                  context.read<DashboardBloc>().add(
+                                                    DashboardEvent.alertMarkedAsRead(alert.id),
+                                                  );
+                                                },
+                                              )
+                                            : null,
+                                      ),
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
+                  ),
                 ],
               ),
 

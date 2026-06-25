@@ -16,12 +16,7 @@ class BookingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt<BookingBloc>()..add(const BookingEvent.fetchBookings()),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
+    return Scaffold(
             backgroundColor: AppColors.background,
             body: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(vertical: 24),
@@ -160,9 +155,6 @@ class BookingsPage extends StatelessWidget {
               ),
             ),
           );
-        },
-      ),
-    );
   }
 
   DataRow _buildRow(

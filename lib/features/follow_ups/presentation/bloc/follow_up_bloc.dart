@@ -6,12 +6,17 @@ import 'follow_up_state.dart';
 class FollowUpBloc extends Bloc<FollowUpEvent, FollowUpState> {
   final FollowUpService followUpService;
 
-  FollowUpBloc({required this.followUpService}) : super(const FollowUpState.initial()) {
+  FollowUpBloc({required this.followUpService})
+    : super(const FollowUpState.initial()) {
     on<FetchFollowUps>(_onFetchFollowUps);
     on<AddFollowUp>(_onAddFollowUp);
+    on<UpdateFollowUp>(_onUpdateFollowUp);
   }
 
-  Future<void> _onFetchFollowUps(FetchFollowUps event, Emitter<FollowUpState> emit) async {
+  Future<void> _onFetchFollowUps(
+    FetchFollowUps event,
+    Emitter<FollowUpState> emit,
+  ) async {
     emit(const FollowUpState.loading());
     try {
       final followUps = await followUpService.getFollowUps(
@@ -23,13 +28,35 @@ class FollowUpBloc extends Bloc<FollowUpEvent, FollowUpState> {
     }
   }
 
-  Future<void> _onAddFollowUp(AddFollowUp event, Emitter<FollowUpState> emit) async {
+  Future<void> _onAddFollowUp(
+    AddFollowUp event,
+    Emitter<FollowUpState> emit,
+  ) async {
     try {
       final followUp = await followUpService.createFollowUp(event.data);
       if (followUp != null) {
         add(const FetchFollowUps());
       } else {
         emit(const FollowUpState.error('Failed to add follow-up'));
+      }
+    } catch (e) {
+      emit(FollowUpState.error(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateFollowUp(
+    UpdateFollowUp event,
+    Emitter<FollowUpState> emit,
+  ) async {
+    try {
+      final followUp = await followUpService.updateFollowUp(
+        event.id,
+        event.data,
+      );
+      if (followUp != null) {
+        add(const FetchFollowUps());
+      } else {
+        emit(const FollowUpState.error('Failed to update follow-up'));
       }
     } catch (e) {
       emit(FollowUpState.error(e.toString()));
