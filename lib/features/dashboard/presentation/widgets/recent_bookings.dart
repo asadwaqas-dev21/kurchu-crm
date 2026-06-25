@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
 
 class RecentBookings extends StatelessWidget {
-  const RecentBookings({Key? key}) : super(key: key);
+  const RecentBookings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +20,13 @@ class RecentBookings extends StatelessWidget {
         children: [
           Row(
             children: [
-               Icon(Iconsax.timer_1, color: AppColors.textPrimary, size: 20),
+              Icon(Iconsax.timer_1, color: AppColors.textPrimary, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Recent Bookings',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -41,7 +43,7 @@ class RecentBookings extends StatelessWidget {
                   statusColor: AppColors.success,
                   statusBgColor: AppColors.iconBgGreen,
                 ),
-                 Divider(color: AppColors.border, height: 24),
+                Divider(color: AppColors.border, height: 24),
                 _buildBookingItem(
                   context,
                   name: 'Ankita Singh',
@@ -59,9 +61,17 @@ class RecentBookings extends StatelessWidget {
     );
   }
 
-  Widget _buildBookingItem(BuildContext context, {required String name, required String destination, required String amount, required String status, required Color statusColor, required Color statusBgColor}) {
+  Widget _buildBookingItem(
+    BuildContext context, {
+    required String name,
+    required String destination,
+    required String amount,
+    required String status,
+    required Color statusColor,
+    required Color statusBgColor,
+  }) {
     final initials = name.split(' ').map((e) => e[0]).take(2).join('');
-    
+
     return Row(
       children: [
         CircleAvatar(
@@ -69,7 +79,11 @@ class RecentBookings extends StatelessWidget {
           backgroundColor: AppColors.iconBgPurple,
           child: Text(
             initials,
-            style:  TextStyle(fontSize: 12, color: AppColors.iconPurple, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.iconPurple,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         const SizedBox(width: 12),
@@ -80,12 +94,16 @@ class RecentBookings extends StatelessWidget {
             children: [
               Text(
                 name,
-                style:  TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
                 destination,
-                style:  TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -94,7 +112,11 @@ class RecentBookings extends StatelessWidget {
           flex: 1,
           child: Text(
             amount,
-            style:  TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: AppColors.textPrimary,
+            ),
           ),
         ),
         Container(
@@ -105,7 +127,11 @@ class RecentBookings extends StatelessWidget {
           ),
           child: Text(
             status,
-            style: TextStyle(fontSize: 11, color: statusColor, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 11,
+              color: statusColor,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

@@ -9,7 +9,7 @@ import 'package:crm_kurchudashboard/features/bookings/data/services/booking_serv
 import 'package:crm_kurchudashboard/features/leads/data/services/lead_service.dart';
 
 class FinancePage extends StatefulWidget {
-  const FinancePage({Key? key}) : super(key: key);
+  const FinancePage({super.key});
 
   @override
   State<FinancePage> createState() => _FinancePageState();
@@ -42,19 +42,24 @@ class _FinancePageState extends State<FinancePage> {
       final leadService = getIt<LeadService>();
 
       // 1. Load Metrics
-      final metricsResponse = await apiClient.get(ApiConstants.dashboardMetrics);
+      final metricsResponse = await apiClient.get(
+        ApiConstants.dashboardMetrics,
+      );
       final metrics = metricsResponse.data['data'] ?? {};
-      
+
       final double collected = (metrics['collectedAmount'] ?? 0).toDouble();
       final double pending = (metrics['pendingPayments'] ?? 0).toDouble();
       final double profit = (metrics['totalProfit'] ?? 0).toDouble();
-      
+
       // 2. Load Bookings
       final bookings = await bookingService.getBookings();
-      
+
       // 3. Load Leads to match names
       final leadsResult = await leadService.getLeads(limit: 100);
-      final leadMap = {for (var lead in leadsResult.leads) lead.id: '${lead.firstName} ${lead.lastName}'};
+      final leadMap = {
+        for (var lead in leadsResult.leads)
+          lead.id: '${lead.firstName} ${lead.lastName}',
+      };
 
       // 4. Load Chart Data
       final chartResponse = await apiClient.get(
@@ -64,13 +69,17 @@ class _FinancePageState extends State<FinancePage> {
       final chartData = chartResponse.data['data'] ?? {};
       final List<dynamic> labels = chartData['labels'] ?? [];
       final List<dynamic> datasets = chartData['datasets'] ?? [];
-      final List<dynamic> rawData = (datasets.isNotEmpty) ? (datasets[0]['data'] ?? []) : [];
+      final List<dynamic> rawData = (datasets.isNotEmpty)
+          ? (datasets[0]['data'] ?? [])
+          : [];
 
       // Calculate due payments from bookings with pendingAmount > 0
       final List<Map<String, dynamic>> dues = [];
       for (var booking in bookings) {
         if (booking.pendingAmount > 0) {
-          final leadName = leadMap[booking.leadId] ?? 'Lead ${booking.leadId.substring(0, 8)}';
+          final leadName =
+              leadMap[booking.leadId] ??
+              'Lead ${booking.leadId.substring(0, 8)}';
           dues.add({
             'name': leadName,
             'amount': 'PKR ${booking.pendingAmount.toInt()}',
@@ -104,7 +113,7 @@ class _FinancePageState extends State<FinancePage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return  Scaffold(
+      return Scaffold(
         backgroundColor: AppColors.background,
         body: Center(child: CircularProgressIndicator()),
       );
@@ -114,7 +123,10 @@ class _FinancePageState extends State<FinancePage> {
       return Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: Text('Error loading finance data: $_error', style:  TextStyle(color: AppColors.error)),
+          child: Text(
+            'Error loading finance data: $_error',
+            style: TextStyle(color: AppColors.error),
+          ),
         ),
       );
     }
@@ -134,60 +146,62 @@ class _FinancePageState extends State<FinancePage> {
               ),
             ),
             const SizedBox(height: 4),
-             Text(
+            Text(
               'Track all your financial transactions.',
               style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 24),
-            
+
             // KPI Cards
-            LayoutBuilder(builder: (context, constraints) {
-              int crossAxisCount = constraints.maxWidth > 750 ? 4 : 2;
-              return GridView.count(
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: crossAxisCount == 4 ? 1.6 : 2.0,
-                children: [
-                  KpiCard(
-                    title: 'Total Booking Value',
-                    value: 'PKR ${_totalBookingValue.toInt()}',
-                    subtitle: 'Total bookings',
-                    icon: Iconsax.wallet,
-                    iconColor: AppColors.iconBlue,
-                    iconBgColor: AppColors.iconBgBlue,
-                  ),
-                  KpiCard(
-                    title: 'Total Collected',
-                    value: 'PKR ${_totalCollected.toInt()}',
-                    subtitle: 'This month',
-                    icon: Iconsax.tick_circle,
-                    iconColor: AppColors.iconGreen,
-                    iconBgColor: AppColors.iconBgGreen,
-                  ),
-                  KpiCard(
-                    title: 'Balance to Collect',
-                    value: 'PKR ${_balanceToCollect.toInt()}',
-                    subtitle: 'Pending',
-                    icon: Iconsax.clock,
-                    iconColor: AppColors.error,
-                    iconBgColor: const Color(0xFFFCE7F3),
-                  ),
-                  KpiCard(
-                    title: 'Total Profit',
-                    value: 'PKR ${_totalProfit.toInt()}',
-                    subtitle: '+15% vs last month',
-                    icon: Iconsax.trend_up,
-                    iconColor: AppColors.success,
-                    iconBgColor: AppColors.iconBgGreen,
-                  ),
-                ],
-              );
-            }),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                int crossAxisCount = constraints.maxWidth > 750 ? 4 : 2;
+                return GridView.count(
+                  crossAxisCount: crossAxisCount,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio: crossAxisCount == 4 ? 1.6 : 2.0,
+                  children: [
+                    KpiCard(
+                      title: 'Total Booking Value',
+                      value: 'PKR ${_totalBookingValue.toInt()}',
+                      subtitle: 'Total bookings',
+                      icon: Iconsax.wallet,
+                      iconColor: AppColors.iconBlue,
+                      iconBgColor: AppColors.iconBgBlue,
+                    ),
+                    KpiCard(
+                      title: 'Total Collected',
+                      value: 'PKR ${_totalCollected.toInt()}',
+                      subtitle: 'This month',
+                      icon: Iconsax.tick_circle,
+                      iconColor: AppColors.iconGreen,
+                      iconBgColor: AppColors.iconBgGreen,
+                    ),
+                    KpiCard(
+                      title: 'Balance to Collect',
+                      value: 'PKR ${_balanceToCollect.toInt()}',
+                      subtitle: 'Pending',
+                      icon: Iconsax.clock,
+                      iconColor: AppColors.error,
+                      iconBgColor: const Color(0xFFFCE7F3),
+                    ),
+                    KpiCard(
+                      title: 'Total Profit',
+                      value: 'PKR ${_totalProfit.toInt()}',
+                      subtitle: '+15% vs last month',
+                      icon: Iconsax.trend_up,
+                      iconColor: AppColors.success,
+                      iconBgColor: AppColors.iconBgGreen,
+                    ),
+                  ],
+                );
+              },
+            ),
             const SizedBox(height: 24),
-            
+
             // Charts & Lists Area
             LayoutBuilder(
               builder: (context, constraints) {
@@ -209,8 +223,8 @@ class _FinancePageState extends State<FinancePage> {
                     ],
                   );
                 }
-              }
-            )
+              },
+            ),
           ],
         ),
       ),
@@ -229,10 +243,15 @@ class _FinancePageState extends State<FinancePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text('Collection Trend', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary)),
-          Expanded(
-            child: _buildCollectionTrendChart(),
+          Text(
+            'Collection Trend',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: AppColors.textPrimary,
+            ),
           ),
+          Expanded(child: _buildCollectionTrendChart()),
         ],
       ),
     );
@@ -250,14 +269,27 @@ class _FinancePageState extends State<FinancePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text('Due Payments', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary)),
+          Text(
+            'Due Payments',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: AppColors.textPrimary,
+            ),
+          ),
           const SizedBox(height: 16),
           Expanded(
             child: _duePayments.isEmpty
-                ?  Center(child: Text('No due payments.', style: TextStyle(color: AppColors.textSecondary)))
+                ? Center(
+                    child: Text(
+                      'No due payments.',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
+                  )
                 : ListView.separated(
                     itemCount: _duePayments.length,
-                    separatorBuilder: (context, index) =>  Divider(color: AppColors.border, height: 16),
+                    separatorBuilder: (context, index) =>
+                        Divider(color: AppColors.border, height: 16),
                     itemBuilder: (context, index) {
                       final item = _duePayments[index];
                       return _buildDuePaymentItem(item['name'], item['amount']);
@@ -271,10 +303,17 @@ class _FinancePageState extends State<FinancePage> {
 
   Widget _buildCollectionTrendChart() {
     if (_chartData.isEmpty) {
-      return  Center(child: Text('No collection trend data available.', style: TextStyle(color: AppColors.textSecondary)));
+      return Center(
+        child: Text(
+          'No collection trend data available.',
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+      );
     }
 
-    final double maxVal = _chartData.reduce((curr, next) => curr > next ? curr : next);
+    final double maxVal = _chartData.reduce(
+      (curr, next) => curr > next ? curr : next,
+    );
     final double maxBarHeight = 160.0;
 
     return Padding(
@@ -285,21 +324,27 @@ class _FinancePageState extends State<FinancePage> {
         children: List.generate(_chartData.length, (index) {
           final double value = _chartData[index];
           final String label = _chartLabels[index];
-          final double barHeight = maxVal > 0 ? (value / maxVal) * maxBarHeight : 0;
+          final double barHeight = maxVal > 0
+              ? (value / maxVal) * maxBarHeight
+              : 0;
 
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
                 'PKR ${value >= 1000 ? "${(value / 1000).toStringAsFixed(1)}k" : value.toInt()}',
-                style:  TextStyle(fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 10,
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Container(
                 width: 28,
                 height: barHeight == 0 ? 4 : barHeight,
                 decoration: BoxDecoration(
-                  gradient:  LinearGradient(
+                  gradient: LinearGradient(
                     colors: [AppColors.iconBlue, Color(0xFF0EA5E9)],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
@@ -310,7 +355,11 @@ class _FinancePageState extends State<FinancePage> {
               const SizedBox(height: 8),
               Text(
                 label,
-                style:  TextStyle(fontSize: 12, color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           );
@@ -330,13 +379,30 @@ class _FinancePageState extends State<FinancePage> {
               CircleAvatar(
                 radius: 14,
                 backgroundColor: AppColors.iconBgOrange,
-                child:  Icon(Iconsax.user, size: 16, color: AppColors.iconOrange),
+                child: Icon(
+                  Iconsax.user,
+                  size: 16,
+                  color: AppColors.iconOrange,
+                ),
               ),
               const SizedBox(width: 12),
-              Text(name, style:  TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
+              Text(
+                name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: AppColors.textPrimary,
+                ),
+              ),
             ],
           ),
-          Text(amount, style:  TextStyle(fontWeight: FontWeight.bold, color: AppColors.error)),
+          Text(
+            amount,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.error,
+            ),
+          ),
         ],
       ),
     );

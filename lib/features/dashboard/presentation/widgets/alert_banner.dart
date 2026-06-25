@@ -7,17 +7,17 @@ class AlertBanner extends StatelessWidget {
   final String severity;
 
   const AlertBanner({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
     required this.severity,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     Color bannerColor = Colors.blue;
     IconData bannerIcon = Iconsax.info_circle;
-    
+
     if (severity == 'WARNING') {
       bannerColor = Colors.orange;
       bannerIcon = Iconsax.warning_2;
@@ -30,9 +30,9 @@ class AlertBanner extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: bannerColor.withOpacity(0.1),
+        color: bannerColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: bannerColor.withOpacity(0.3)),
+        border: Border.all(color: bannerColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,10 +53,7 @@ class AlertBanner extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   message,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black87,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.black87),
                 ),
               ],
             ),

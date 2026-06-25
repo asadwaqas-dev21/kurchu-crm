@@ -126,7 +126,8 @@ class _TopBarState extends State<TopBar> {
   }
 
   OverlayEntry _createOverlayEntry() {
-    final RenderBox? searchRenderBox = _searchKey.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? searchRenderBox =
+        _searchKey.currentContext?.findRenderObject() as RenderBox?;
     final size = searchRenderBox?.size ?? const Size(400, 40);
 
     return OverlayEntry(
@@ -167,7 +168,7 @@ class _TopBarState extends State<TopBar> {
     final hasInvoices = _invoiceResults.isNotEmpty;
 
     if (!hasLeads && !hasBookings && !hasInvoices) {
-      return  Padding(
+      return Padding(
         padding: EdgeInsets.all(16.0),
         child: Center(
           child: Text(
@@ -205,12 +206,15 @@ class _TopBarState extends State<TopBar> {
             final leadName = booking['lead'] != null
                 ? '${booking['lead']['firstName'] ?? ''} ${booking['lead']['lastName'] ?? ''}'
                 : 'Booking ID: ${booking['id']}';
-            final destination = booking['service'] != null ? booking['service']['name'] ?? '' : 'Travel Booking';
+            final destination = booking['service'] != null
+                ? booking['service']['name'] ?? ''
+                : 'Travel Booking';
             return _buildResultItem(
               icon: Iconsax.ticket,
               iconColor: AppColors.iconGreen,
               title: '$destination - $leadName',
-              subtitle: 'Status: ${booking['status']} · PKR ${booking['amount']}',
+              subtitle:
+                  'Status: ${booking['status']} · PKR ${booking['amount']}',
               onTap: () {
                 _hideSearchOverlay();
                 _searchController.clear();
@@ -222,14 +226,16 @@ class _TopBarState extends State<TopBar> {
         if (hasInvoices) ...[
           _buildCategoryHeader('INVOICES'),
           ..._invoiceResults.map((invoice) {
-            final leadName = invoice['booking'] != null && invoice['booking']['lead'] != null
+            final leadName =
+                invoice['booking'] != null && invoice['booking']['lead'] != null
                 ? '${invoice['booking']['lead']['firstName'] ?? ''} ${invoice['booking']['lead']['lastName'] ?? ''}'
                 : 'Invoice';
             return _buildResultItem(
               icon: Iconsax.wallet,
               iconColor: AppColors.iconOrange,
               title: 'Invoice #${invoice['number']}',
-              subtitle: 'Client: $leadName · Status: ${invoice['status']} · PKR ${invoice['amount']}',
+              subtitle:
+                  'Client: $leadName · Status: ${invoice['status']} · PKR ${invoice['amount']}',
               onTap: () {
                 _hideSearchOverlay();
                 _searchController.clear();
@@ -247,7 +253,7 @@ class _TopBarState extends State<TopBar> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Text(
         title,
-        style:  TextStyle(
+        style: TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.bold,
           color: AppColors.textSecondary,
@@ -267,16 +273,20 @@ class _TopBarState extends State<TopBar> {
     return ListTile(
       leading: CircleAvatar(
         radius: 14,
-        backgroundColor: iconColor.withOpacity(0.1),
+        backgroundColor: iconColor.withValues(alpha: 0.1),
         child: Icon(icon, size: 14, color: iconColor),
       ),
       title: Text(
         title,
-        style:  TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textPrimary,
+        ),
       ),
       subtitle: Text(
         subtitle,
-        style:  TextStyle(fontSize: 11, color: AppColors.textSecondary),
+        style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
       ),
       dense: true,
       onTap: onTap,
@@ -289,12 +299,12 @@ class _TopBarState extends State<TopBar> {
       builder: (context, state) {
         final alerts = state is Loaded ? state.alerts : [];
         final unreadCount = alerts.where((a) => !a.isRead).length;
-        
+
         final topAlerts = alerts.take(3).toList();
 
         return Container(
           height: 70,
-          decoration:  BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.surface,
             border: Border(bottom: BorderSide(color: AppColors.border)),
           ),
@@ -324,7 +334,7 @@ class _TopBarState extends State<TopBar> {
                     child: Row(
                       children: [
                         const SizedBox(width: 12),
-                         Icon(
+                        Icon(
                           Iconsax.search_normal,
                           color: AppColors.textSecondary,
                           size: 20,
@@ -334,11 +344,11 @@ class _TopBarState extends State<TopBar> {
                           child: TextField(
                             controller: _searchController,
                             focusNode: _searchFocusNode,
-                            style:  TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
                               color: AppColors.textPrimary,
                             ),
-                            decoration:  InputDecoration(
+                            decoration: InputDecoration(
                               hintText: 'Search leads, bookings, phone...',
                               hintStyle: TextStyle(
                                 color: AppColors.textSecondary,
@@ -360,27 +370,35 @@ class _TopBarState extends State<TopBar> {
 
               // Dynamic Notification Chips (from loaded Alerts)
               if (topAlerts.isNotEmpty)
-                ...topAlerts.expand((alert) => [
-                      _buildNotificationChip(
-                        '${alert.severity == 'ERROR' || alert.severity == 'CRITICAL' ? '⚠️ ' : ''}${alert.title}',
-                        alert.severity == 'ERROR' || alert.severity == 'CRITICAL',
-                      ),
-                      const SizedBox(width: 8),
-                    ]).toList(),
+                ...topAlerts.expand(
+                  (alert) => [
+                    _buildNotificationChip(
+                      '${alert.severity == 'ERROR' || alert.severity == 'CRITICAL' ? '⚠️ ' : ''}${alert.title}',
+                      alert.severity == 'ERROR' || alert.severity == 'CRITICAL',
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
 
               const SizedBox(width: 16),
 
               // Total Alerts Count Indicator
               if (alerts.isNotEmpty)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.border,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '+${alerts.length}',
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
 
@@ -390,7 +408,7 @@ class _TopBarState extends State<TopBar> {
               Stack(
                 children: [
                   IconButton(
-                    icon:  Icon(
+                    icon: Icon(
                       Iconsax.notification,
                       color: AppColors.textPrimary,
                     ),
@@ -404,7 +422,7 @@ class _TopBarState extends State<TopBar> {
                       top: 8,
                       child: Container(
                         padding: const EdgeInsets.all(4),
-                        decoration:  BoxDecoration(
+                        decoration: BoxDecoration(
                           color: AppColors.error,
                           shape: BoxShape.circle,
                         ),
@@ -432,8 +450,9 @@ class _TopBarState extends State<TopBar> {
                   color: AppColors.textPrimary,
                 ),
                 onPressed: () {
-                  AppColors.themeModeNotifier.value =
-                      AppColors.isDarkMode ? ThemeMode.light : ThemeMode.dark;
+                  AppColors.themeModeNotifier.value = AppColors.isDarkMode
+                      ? ThemeMode.light
+                      : ThemeMode.dark;
                 },
               ),
             ],
@@ -450,7 +469,8 @@ class _TopBarState extends State<TopBar> {
         color: isCritical ? AppColors.iconBgOrange : AppColors.iconBgPurple,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: (isCritical ? AppColors.warning : AppColors.iconPurple).withOpacity(0.3),
+          color: (isCritical ? AppColors.warning : AppColors.iconPurple)
+              .withValues(alpha: 0.3),
         ),
       ),
       child: Row(

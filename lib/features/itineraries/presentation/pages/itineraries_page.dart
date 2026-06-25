@@ -10,12 +10,13 @@ import 'package:crm_kurchudashboard/features/leads/data/services/lead_service.da
 import 'package:crm_kurchudashboard/features/leads/data/models/lead_model.dart';
 
 class ItinerariesPage extends StatelessWidget {
-  const ItinerariesPage({Key? key}) : super(key: key);
+  const ItinerariesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<ItineraryBloc>()..add(const ItineraryEvent.fetchItineraries()),
+      create: (context) =>
+          getIt<ItineraryBloc>()..add(const ItineraryEvent.fetchItineraries()),
       child: Builder(
         builder: (context) {
           return Scaffold(
@@ -30,15 +31,19 @@ class ItinerariesPage extends StatelessWidget {
                     children: [
                       Text(
                         'Itineraries',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
-                        ),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
                       ),
                       GestureDetector(
                         onTap: () => _showAddItineraryDialog(context),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.iconPurple,
                             borderRadius: BorderRadius.circular(8),
@@ -47,7 +52,13 @@ class ItinerariesPage extends StatelessWidget {
                             children: const [
                               Icon(Iconsax.add, color: Colors.white, size: 20),
                               SizedBox(width: 8),
-                              Text('Create Itinerary', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                              Text(
+                                'Create Itinerary',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -58,11 +69,19 @@ class ItinerariesPage extends StatelessWidget {
                   BlocBuilder<ItineraryBloc, ItineraryState>(
                     builder: (context, state) {
                       return state.maybeWhen(
-                        loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (message) => Center(child: Text('Error: $message', style:  TextStyle(color: AppColors.error))),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (message) => Center(
+                          child: Text(
+                            'Error: $message',
+                            style: TextStyle(color: AppColors.error),
+                          ),
+                        ),
                         loaded: (itineraries) {
                           if (itineraries.isEmpty) {
-                            return const Center(child: Text('No itineraries found.'));
+                            return const Center(
+                              child: Text('No itineraries found.'),
+                            );
                           }
                           return GridView.count(
                             crossAxisCount: 3,
@@ -71,7 +90,9 @@ class ItinerariesPage extends StatelessWidget {
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             children: itineraries.map((itinerary) {
-                              final duration = itinerary.endDate.difference(itinerary.startDate).inDays;
+                              final duration = itinerary.endDate
+                                  .difference(itinerary.startDate)
+                                  .inDays;
                               return _buildItineraryCard(
                                 itinerary.title,
                                 '$duration Nights / ${duration + 1} Days',
@@ -110,14 +131,35 @@ class ItinerariesPage extends StatelessWidget {
               color: AppColors.iconBgBlue,
               borderRadius: BorderRadius.circular(8),
             ),
-            child:  Center(child: Icon(Iconsax.map, size: 40, color: AppColors.iconBlue)),
+            child: Center(
+              child: Icon(Iconsax.map, size: 40, color: AppColors.iconBlue),
+            ),
           ),
           const SizedBox(height: 16),
-          Text(title, style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary), maxLines: 2, overflow: TextOverflow.ellipsis),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: AppColors.textPrimary,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 4),
-          Text(duration, style:  TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+          Text(
+            duration,
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+          ),
           const Spacer(),
-          Text(price, style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.iconGreen)),
+          Text(
+            price,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: AppColors.iconGreen,
+            ),
+          ),
         ],
       ),
     );
@@ -136,7 +178,7 @@ class ItinerariesPage extends StatelessWidget {
 }
 
 class AddItineraryDialog extends StatefulWidget {
-  const AddItineraryDialog({Key? key}) : super(key: key);
+  const AddItineraryDialog({super.key});
 
   @override
   State<AddItineraryDialog> createState() => _AddItineraryDialogState();
@@ -162,7 +204,7 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
     try {
       final leadService = getIt<LeadService>();
       final leadsResult = await leadService.getLeads(limit: 100);
-      
+
       if (!mounted) return;
       setState(() {
         _leads = leadsResult.leads;
@@ -183,7 +225,7 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return  AlertDialog(
+      return AlertDialog(
         backgroundColor: AppColors.surface,
         content: SizedBox(
           height: 100,
@@ -195,12 +237,18 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
     if (_error != null) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title:  Text('Error Loading Leads', style: TextStyle(color: AppColors.textPrimary)),
-        content: Text(_error!, style:  TextStyle(color: AppColors.error)),
+        title: Text(
+          'Error Loading Leads',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: Text(_error!, style: TextStyle(color: AppColors.error)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child:  Text('Close', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(
+              'Close',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
           ),
         ],
       );
@@ -209,15 +257,21 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
     if (_leads.isEmpty) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title:  Text('Add Itinerary', style: TextStyle(color: AppColors.textPrimary)),
-        content:  Text(
+        title: Text(
+          'Add Itinerary',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: Text(
           'No leads found in the database. Please create a lead first.',
           style: TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child:  Text('Close', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(
+              'Close',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
           ),
         ],
       );
@@ -225,7 +279,10 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
 
     return AlertDialog(
       backgroundColor: AppColors.surface,
-      title:  Text('Add Itinerary', style: TextStyle(color: AppColors.textPrimary)),
+      title: Text(
+        'Add Itinerary',
+        style: TextStyle(color: AppColors.textPrimary),
+      ),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -234,11 +291,14 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Lead Dropdown
-               Text('Lead', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+              Text(
+                'Lead',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+              ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 dropdownColor: AppColors.surface,
-                style:  TextStyle(color: AppColors.textPrimary),
+                style: TextStyle(color: AppColors.textPrimary),
                 value: _selectedLeadId,
                 items: _leads.map((lead) {
                   return DropdownMenuItem<String>(
@@ -252,8 +312,13 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
                   });
                 },
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                 ),
                 validator: (val) => val == null ? 'Please select a lead' : null,
               ),
@@ -261,25 +326,26 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
 
               // Title
               TextFormField(
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Title',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style:  TextStyle(color: AppColors.textPrimary),
+                style: TextStyle(color: AppColors.textPrimary),
                 onSaved: (val) => _title = val ?? '',
-                validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
+                validator: (val) =>
+                    (val == null || val.isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 16),
 
               // Description
               TextFormField(
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Description',
                   labelStyle: TextStyle(color: AppColors.textSecondary),
                   border: OutlineInputBorder(),
                 ),
-                style:  TextStyle(color: AppColors.textPrimary),
+                style: TextStyle(color: AppColors.textPrimary),
                 onSaved: (val) => _description = val ?? '',
               ),
             ],
@@ -289,20 +355,27 @@ class _AddItineraryDialogState extends State<AddItineraryDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child:  Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          child: Text(
+            'Cancel',
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: AppColors.iconPurple),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.iconPurple,
+          ),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
-              
+
               Navigator.pop(context, {
                 'leadId': _selectedLeadId,
                 'title': _title,
                 'description': _description,
                 'startDate': DateTime.now().toIso8601String(),
-                'endDate': DateTime.now().add(const Duration(days: 3)).toIso8601String(),
+                'endDate': DateTime.now()
+                    .add(const Duration(days: 3))
+                    .toIso8601String(),
               });
             }
           },

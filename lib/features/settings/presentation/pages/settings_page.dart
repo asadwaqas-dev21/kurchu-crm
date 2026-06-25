@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/material.dart';
 import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
@@ -5,7 +7,7 @@ import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/core/services/auth_service.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -17,7 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late TextEditingController _lastNameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
-  
+
   bool _isSaving = false;
   String _activeTab = 'Profile';
 
@@ -74,7 +76,9 @@ class _SettingsPageState extends State<SettingsPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          success ? 'Profile updated successfully!' : 'Failed to update profile.',
+          success
+              ? 'Profile updated successfully!'
+              : 'Failed to update profile.',
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: success ? AppColors.success : AppColors.error,
@@ -84,7 +88,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final initials = "${_firstNameController.text.isNotEmpty ? _firstNameController.text[0] : ''}${_lastNameController.text.isNotEmpty ? _lastNameController.text[0] : ''}".toUpperCase();
+    final initials =
+        "${_firstNameController.text.isNotEmpty ? _firstNameController.text[0] : ''}${_lastNameController.text.isNotEmpty ? _lastNameController.text[0] : ''}"
+            .toUpperCase();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -101,7 +107,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 4),
-             Text(
+            Text(
               'Manage your preferences and account settings.',
               style: TextStyle(color: AppColors.textSecondary),
             ),
@@ -123,7 +129,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildSettingsTab('Profile', Iconsax.profile),
-                        _buildSettingsTab('Notifications', Iconsax.notification),
+                        _buildSettingsTab(
+                          'Notifications',
+                          Iconsax.notification,
+                        ),
                         _buildSettingsTab('Security', Iconsax.lock),
                         _buildSettingsTab('Integrations', Iconsax.link),
                         _buildSettingsTab('Billing', Iconsax.card),
@@ -138,8 +147,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: _activeTab == 'Profile'
                       ? _buildProfileContent(initials)
                       : (_activeTab == 'Notifications'
-                          ? _buildNotificationsContent()
-                          : _buildPlaceholderContent()),
+                            ? _buildNotificationsContent()
+                            : _buildPlaceholderContent()),
                 ),
               ],
             ),
@@ -207,7 +216,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text(
+            Text(
               'Profile Information',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -223,7 +232,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   backgroundColor: AppColors.iconBgBlue,
                   child: Text(
                     initials,
-                    style:  TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: AppColors.iconBlue,
@@ -240,9 +249,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     border: Border.all(color: AppColors.border),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child:  Text(
+                  child: Text(
                     'Change Avatar',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                 ),
               ],
@@ -251,11 +263,19 @@ class _SettingsPageState extends State<SettingsPage> {
             Row(
               children: [
                 Expanded(
-                  child: _buildTextField('First Name', _firstNameController, true),
+                  child: _buildTextField(
+                    'First Name',
+                    _firstNameController,
+                    true,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _buildTextField('Last Name', _lastNameController, true),
+                  child: _buildTextField(
+                    'Last Name',
+                    _lastNameController,
+                    true,
+                  ),
                 ),
               ],
             ),
@@ -269,15 +289,23 @@ class _SettingsPageState extends State<SettingsPage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.iconPurple,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
                 onPressed: _isSaving ? null : _saveChanges,
                 child: _isSaving
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
                       )
                     : const Text(
                         'Save Changes',
@@ -294,13 +322,17 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, bool isEditable) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller,
+    bool isEditable,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style:  TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w500,
             color: AppColors.textSecondary,
             fontSize: 13,
@@ -312,7 +344,9 @@ class _SettingsPageState extends State<SettingsPage> {
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.border),
             borderRadius: BorderRadius.circular(8),
-            color: isEditable ? Colors.transparent : AppColors.border.withOpacity(0.2),
+            color: isEditable
+                ? Colors.transparent
+                : AppColors.border.withOpacity(0.2),
           ),
           child: TextFormField(
             controller: controller,
@@ -323,7 +357,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: isEditable ? AppColors.textPrimary : AppColors.textSecondary,
+              color: isEditable
+                  ? AppColors.textPrimary
+                  : AppColors.textSecondary,
             ),
             validator: (val) {
               if (isEditable && (val == null || val.isEmpty)) {
@@ -349,14 +385,18 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             Icon(Iconsax.setting_3, size: 48, color: AppColors.textSecondary),
+            Icon(Iconsax.setting_3, size: 48, color: AppColors.textSecondary),
             const SizedBox(height: 16),
             Text(
               '$_activeTab Settings',
-              style:  TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 8),
-             Text(
+            Text(
               'This settings panel is coming soon!',
               style: TextStyle(color: AppColors.textSecondary),
             ),
@@ -377,14 +417,14 @@ class _SettingsPageState extends State<SettingsPage> {
         _emailLeads = settings['emailLeads'] ?? true;
         _emailBookings = settings['emailBookings'] ?? true;
         _emailSystem = settings['emailSystem'] ?? false;
-        
+
         _pushLeads = settings['pushLeads'] ?? true;
         _pushBookings = settings['pushBookings'] ?? true;
         _pushSystem = settings['pushSystem'] ?? true;
-        
+
         _smsLeads = settings['smsLeads'] ?? false;
         _smsBookings = settings['smsBookings'] ?? false;
-        
+
         _isLoadingSettings = false;
       });
     } else if (mounted) {
@@ -418,7 +458,9 @@ class _SettingsPageState extends State<SettingsPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          success ? 'Notification settings updated successfully!' : 'Failed to update settings.',
+          success
+              ? 'Notification settings updated successfully!'
+              : 'Failed to update settings.',
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: success ? AppColors.success : AppColors.error,
@@ -435,9 +477,7 @@ class _SettingsPageState extends State<SettingsPage> {
           border: Border.all(color: AppColors.border),
         ),
         padding: const EdgeInsets.all(48),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -451,7 +491,7 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
+          Text(
             'Notification Preferences',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -460,12 +500,12 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           const SizedBox(height: 8),
-           Text(
+          Text(
             'Select how and when you want to receive alerts and system updates.',
             style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
           ),
           const SizedBox(height: 24),
-          
+
           _buildNotificationSectionHeader('Email Notifications'),
           _buildSwitchRow(
             'New leads assigned',
@@ -473,21 +513,21 @@ class _SettingsPageState extends State<SettingsPage> {
             _emailLeads,
             (val) => setState(() => _emailLeads = val),
           ),
-           Divider(color: AppColors.border, height: 16),
+          Divider(color: AppColors.border, height: 16),
           _buildSwitchRow(
             'Booking status updates',
             'Get notified when a client confirms or cancels a booking.',
             _emailBookings,
             (val) => setState(() => _emailBookings = val),
           ),
-           Divider(color: AppColors.border, height: 16),
+          Divider(color: AppColors.border, height: 16),
           _buildSwitchRow(
             'System alerts',
             'Receive security warnings and system maintenance logs.',
             _emailSystem,
             (val) => setState(() => _emailSystem = val),
           ),
-          
+
           const SizedBox(height: 24),
           _buildNotificationSectionHeader('Push Notifications'),
           _buildSwitchRow(
@@ -496,21 +536,21 @@ class _SettingsPageState extends State<SettingsPage> {
             _pushLeads,
             (val) => setState(() => _pushLeads = val),
           ),
-           Divider(color: AppColors.border, height: 16),
+          Divider(color: AppColors.border, height: 16),
           _buildSwitchRow(
             'Bookings and Payments',
             'Popups when deposits are cleared or bookings are created.',
             _pushBookings,
             (val) => setState(() => _pushBookings = val),
           ),
-           Divider(color: AppColors.border, height: 16),
+          Divider(color: AppColors.border, height: 16),
           _buildSwitchRow(
             'System updates',
             'Popups for system status changes or new releases.',
             _pushSystem,
             (val) => setState(() => _pushSystem = val),
           ),
-          
+
           const SizedBox(height: 24),
           _buildNotificationSectionHeader('SMS Notifications'),
           _buildSwitchRow(
@@ -519,29 +559,37 @@ class _SettingsPageState extends State<SettingsPage> {
             _smsLeads,
             (val) => setState(() => _smsLeads = val),
           ),
-           Divider(color: AppColors.border, height: 16),
+          Divider(color: AppColors.border, height: 16),
           _buildSwitchRow(
             'Bookings confirmation',
             'Receive text alerts for newly confirmed trips.',
             _smsBookings,
             (val) => setState(() => _smsBookings = val),
           ),
-          
+
           const SizedBox(height: 32),
           Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.iconPurple,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               onPressed: _isSavingSettings ? null : _saveNotificationSettings,
               child: _isSavingSettings
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
                     )
                   : const Text(
                       'Save Preferences',
@@ -562,7 +610,7 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Text(
         title.toUpperCase(),
-        style:  TextStyle(
+        style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.bold,
           color: AppColors.textSecondary,
@@ -572,7 +620,12 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildSwitchRow(String title, String subtitle, bool value, ValueChanged<bool> onChanged) {
+  Widget _buildSwitchRow(
+    String title,
+    String subtitle,
+    bool value,
+    ValueChanged<bool> onChanged,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -584,7 +637,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Text(
                   title,
-                  style:  TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                     color: AppColors.textPrimary,
@@ -593,7 +646,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style:  TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
                   ),

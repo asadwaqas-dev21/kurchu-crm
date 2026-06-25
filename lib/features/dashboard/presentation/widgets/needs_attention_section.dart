@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
 
 class NeedsAttentionSection extends StatelessWidget {
-  const NeedsAttentionSection({Key? key}) : super(key: key);
+  const NeedsAttentionSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class NeedsAttentionSection extends StatelessWidget {
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -27,7 +27,7 @@ class NeedsAttentionSection extends StatelessWidget {
         children: [
           Row(
             children: [
-               Icon(Iconsax.warning_2, color: AppColors.warning, size: 20),
+              Icon(Iconsax.warning_2, color: AppColors.warning, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Needs attention',
@@ -109,7 +109,7 @@ class NeedsAttentionSection extends StatelessWidget {
               children: [
                 Text(
                   count,
-                  style:  TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     color: AppColors.textPrimary,
@@ -117,7 +117,7 @@ class NeedsAttentionSection extends StatelessWidget {
                 ),
                 Text(
                   label,
-                  style:  TextStyle(
+                  style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 11,
                   ),

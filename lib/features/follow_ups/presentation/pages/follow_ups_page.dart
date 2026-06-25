@@ -11,7 +11,7 @@ import 'package:crm_kurchudashboard/features/leads/data/services/lead_service.da
 import 'package:crm_kurchudashboard/features/leads/data/models/lead_model.dart';
 
 class FollowUpsPage extends StatefulWidget {
-  const FollowUpsPage({Key? key}) : super(key: key);
+  const FollowUpsPage({super.key});
 
   @override
   State<FollowUpsPage> createState() => _FollowUpsPageState();
@@ -35,138 +35,141 @@ class _FollowUpsPageState extends State<FollowUpsPage>
       child: Builder(
         builder: (context) {
           return Scaffold(
-        backgroundColor: AppColors.background,
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Follow-ups',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+            backgroundColor: AppColors.background,
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Follow-ups',
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                      ),
+                      GestureDetector(
+                        onTap: () => _showAddFollowUpDialog(context),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.iconPurple,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(Iconsax.add, color: Colors.white, size: 20),
+                              SizedBox(width: 8),
+                              Text(
+                                'Add Follow-up',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                GestureDetector(
-                  onTap: () => _showAddFollowUpDialog(context),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
+                  const SizedBox(height: 24),
+                  Container(
                     decoration: BoxDecoration(
-                      color: AppColors.iconPurple,
-                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.border),
                     ),
-                    child: Row(
-                      children: const [
-                        Icon(Iconsax.add, color: Colors.white, size: 20),
-                        SizedBox(width: 8),
-                        Text(
-                          'Add Follow-up',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                    child: Column(
+                      children: [
+                        TabBar(
+                          controller: _tabController,
+                          labelColor: AppColors.iconPurple,
+                          unselectedLabelColor: AppColors.textSecondary,
+                          indicatorColor: AppColors.iconPurple,
+                          tabs: const [
+                            Tab(text: 'Today'),
+                            Tab(text: 'Overdue'),
+                            Tab(text: 'Upcoming'),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 500,
+                          child: BlocBuilder<FollowUpBloc, FollowUpState>(
+                            builder: (context, state) {
+                              return state.maybeWhen(
+                                loading: () => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                error: (message) => Center(
+                                  child: Text(
+                                    'Error: $message',
+                                    style: TextStyle(color: AppColors.error),
+                                  ),
+                                ),
+                                loaded: (followUps) {
+                                  final now = DateTime.now();
+                                  final today = DateTime(
+                                    now.year,
+                                    now.month,
+                                    now.day,
+                                  );
+
+                                  final todayFollowUps = followUps
+                                      .where(
+                                        (f) =>
+                                            f.scheduledAt.isAfter(today) &&
+                                            f.scheduledAt.isBefore(
+                                              today.add(
+                                                const Duration(days: 1),
+                                              ),
+                                            ),
+                                      )
+                                      .toList();
+
+                                  final overdueFollowUps = followUps
+                                      .where(
+                                        (f) =>
+                                            f.scheduledAt.isBefore(today) &&
+                                            !f.isCompleted,
+                                      )
+                                      .toList();
+
+                                  final upcomingFollowUps = followUps
+                                      .where(
+                                        (f) => f.scheduledAt.isAfter(
+                                          today.add(const Duration(days: 1)),
+                                        ),
+                                      )
+                                      .toList();
+
+                                  return TabBarView(
+                                    controller: _tabController,
+                                    children: [
+                                      _buildFollowUpList(todayFollowUps),
+                                      _buildFollowUpList(overdueFollowUps),
+                                      _buildFollowUpList(upcomingFollowUps),
+                                    ],
+                                  );
+                                },
+                                orElse: () => const SizedBox(),
+                              );
+                            },
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Column(
-                children: [
-                    TabBar(
-                      controller: _tabController,
-                      labelColor: AppColors.iconPurple,
-                      unselectedLabelColor: AppColors.textSecondary,
-                      indicatorColor: AppColors.iconPurple,
-                      tabs: const [
-                        Tab(text: 'Today'),
-                        Tab(text: 'Overdue'),
-                        Tab(text: 'Upcoming'),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 500,
-                      child: BlocBuilder<FollowUpBloc, FollowUpState>(
-                        builder: (context, state) {
-                          return state.maybeWhen(
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            error: (message) => Center(
-                              child: Text(
-                                'Error: $message',
-                                style:  TextStyle(color: AppColors.error),
-                              ),
-                            ),
-                            loaded: (followUps) {
-                              final now = DateTime.now();
-                              final today = DateTime(
-                                now.year,
-                                now.month,
-                                now.day,
-                              );
-
-                              final todayFollowUps = followUps
-                                  .where(
-                                    (f) =>
-                                        f.scheduledAt.isAfter(today) &&
-                                        f.scheduledAt.isBefore(
-                                          today.add(const Duration(days: 1)),
-                                        ),
-                                  )
-                                  .toList();
-
-                              final overdueFollowUps = followUps
-                                  .where(
-                                    (f) =>
-                                        f.scheduledAt.isBefore(today) &&
-                                        !f.isCompleted,
-                                  )
-                                  .toList();
-
-                              final upcomingFollowUps = followUps
-                                  .where(
-                                    (f) => f.scheduledAt.isAfter(
-                                      today.add(const Duration(days: 1)),
-                                    ),
-                                  )
-                                  .toList();
-
-                              return TabBarView(
-                                controller: _tabController,
-                                children: [
-                                  _buildFollowUpList(todayFollowUps),
-                                  _buildFollowUpList(overdueFollowUps),
-                                  _buildFollowUpList(upcomingFollowUps),
-                                ],
-                              );
-                            },
-                            orElse: () => const SizedBox(),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
           );
         },
       ),
@@ -181,8 +184,7 @@ class _FollowUpsPageState extends State<FollowUpsPage>
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: followUps.length,
-      separatorBuilder: (context, index) =>
-           Divider(color: AppColors.border),
+      separatorBuilder: (context, index) => Divider(color: AppColors.border),
       itemBuilder: (context, index) {
         final followUp = followUps[index];
         final timeStr =
@@ -214,26 +216,22 @@ class _FollowUpsPageState extends State<FollowUpsPage>
           Expanded(
             child: Text(
               name,
-              style:  TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
               ),
             ),
           ),
-          Text(time, style:  TextStyle(color: AppColors.textSecondary)),
+          Text(time, style: TextStyle(color: AppColors.textSecondary)),
           const SizedBox(width: 24),
           Row(
             children: [
               IconButton(
-                icon:  Icon(
-                  Iconsax.call,
-                  color: AppColors.iconGreen,
-                  size: 20,
-                ),
+                icon: Icon(Iconsax.call, color: AppColors.iconGreen, size: 20),
                 onPressed: () {},
               ),
               IconButton(
-                icon:  Icon(
+                icon: Icon(
                   Iconsax.message,
                   color: AppColors.iconBlue,
                   size: 20,
@@ -259,87 +257,97 @@ class _FollowUpsPageState extends State<FollowUpsPage>
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: AppColors.surface,
-          title:  Text(
+          title: Text(
             'Add Follow-up',
             style: TextStyle(color: AppColors.textPrimary),
           ),
-          content: FutureBuilder<({List<LeadModel> leads, int total, int skip, int limit})>(
-            future: getIt<LeadService>().getLeads(limit: 100),
-            builder: (futureContext, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox(
-                  height: 100,
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              if (snapshot.hasError || !snapshot.hasData || snapshot.data!.leads.isEmpty) {
-                return  SizedBox(
-                  height: 100,
-                  child: Center(
-                    child: Text(
-                      'No leads found. Please create a lead first.',
-                      style: TextStyle(color: AppColors.textSecondary),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
-              }
-
-              final leads = snapshot.data!.leads;
-
-              return StatefulBuilder(
-                builder: (statefulContext, setState) {
-                  if (selectedLeadId == null || !leads.any((l) => l.id == selectedLeadId)) {
-                    selectedLeadId = leads.first.id;
+          content:
+              FutureBuilder<
+                ({List<LeadModel> leads, int total, int skip, int limit})
+              >(
+                future: getIt<LeadService>().getLeads(limit: 100),
+                builder: (futureContext, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      height: 100,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  if (snapshot.hasError ||
+                      !snapshot.hasData ||
+                      snapshot.data!.leads.isEmpty) {
+                    return SizedBox(
+                      height: 100,
+                      child: Center(
+                        child: Text(
+                          'No leads found. Please create a lead first.',
+                          style: TextStyle(color: AppColors.textSecondary),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
                   }
 
-                  return Form(
-                    key: formKey,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          DropdownButtonFormField<String>(
-                            value: selectedLeadId,
-                            decoration:  InputDecoration(
-                              labelText: 'Select Lead',
-                              labelStyle: TextStyle(color: AppColors.textSecondary),
-                            ),
-                            dropdownColor: AppColors.surface,
-                            style:  TextStyle(color: AppColors.textPrimary),
-                            items: leads.map((l) {
-                              return DropdownMenuItem(
-                                value: l.id,
-                                child: Text('${l.firstName} ${l.lastName}'),
-                              );
-                            }).toList(),
-                            onChanged: (val) {
-                              if (val != null) {
-                                setState(() => selectedLeadId = val);
-                              }
-                            },
+                  final leads = snapshot.data!.leads;
+
+                  return StatefulBuilder(
+                    builder: (statefulContext, setState) {
+                      if (selectedLeadId == null ||
+                          !leads.any((l) => l.id == selectedLeadId)) {
+                        selectedLeadId = leads.first.id;
+                      }
+
+                      return Form(
+                        key: formKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              DropdownButtonFormField<String>(
+                                initialValue: selectedLeadId,
+                                decoration: InputDecoration(
+                                  labelText: 'Select Lead',
+                                  labelStyle: TextStyle(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                                dropdownColor: AppColors.surface,
+                                style: TextStyle(color: AppColors.textPrimary),
+                                items: leads.map((l) {
+                                  return DropdownMenuItem(
+                                    value: l.id,
+                                    child: Text('${l.firstName} ${l.lastName}'),
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() => selectedLeadId = val);
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Notes',
+                                  labelStyle: TextStyle(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                                style: TextStyle(color: AppColors.textPrimary),
+                                onSaved: (val) => notes = val ?? '',
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            decoration:  InputDecoration(
-                              labelText: 'Notes',
-                              labelStyle: TextStyle(color: AppColors.textSecondary),
-                            ),
-                            style:  TextStyle(color: AppColors.textPrimary),
-                            onSaved: (val) => notes = val ?? '',
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
-          ),
+              ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child:  Text(
+              child: Text(
                 'Cancel',
                 style: TextStyle(color: AppColors.textSecondary),
               ),

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
 
@@ -53,7 +55,7 @@ class KpiCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style:  TextStyle(
+                  style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -67,7 +69,7 @@ class KpiCard extends StatelessWidget {
           const Spacer(),
           Text(
             value,
-            style:  TextStyle(
+            style: TextStyle(
               color: AppColors.textPrimary,
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -76,10 +78,7 @@ class KpiCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             subtitle,
-            style:  TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 11,
-            ),
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
