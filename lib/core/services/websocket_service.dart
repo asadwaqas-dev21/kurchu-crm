@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'dart:async';
 import 'package:crm_kurchudashboard/core/constants/api_constants.dart';
@@ -6,12 +7,14 @@ import 'package:crm_kurchudashboard/core/services/auth_service.dart';
 class WebSocketService {
   io.Socket? socket;
   final AuthService authService;
-  
-  final _metricsUpdateController = StreamController<Map<String, dynamic>>.broadcast();
+
+  final _metricsUpdateController =
+      StreamController<Map<String, dynamic>>.broadcast();
   final _alertController = StreamController<Map<String, dynamic>>.broadcast();
   final _connectionStatusController = StreamController<bool>.broadcast();
 
-  Stream<Map<String, dynamic>> get metricsUpdateStream => _metricsUpdateController.stream;
+  Stream<Map<String, dynamic>> get metricsUpdateStream =>
+      _metricsUpdateController.stream;
   Stream<Map<String, dynamic>> get alertStream => _alertController.stream;
   Stream<bool> get connectionStatusStream => _connectionStatusController.stream;
 
@@ -19,7 +22,7 @@ class WebSocketService {
 
   Future<void> connect() async {
     final token = authService.getAccessToken();
-    
+
     socket = io.io(
       ApiConstants.wsUrl,
       io.OptionBuilder()
@@ -35,16 +38,22 @@ class WebSocketService {
     // Connection events
     socket!.on('connect', (_) {
       _connectionStatusController.add(true);
-      print('✅ WebSocket connected');
+      if (kDebugMode) {
+        print('✅ WebSocket connected');
+      }
     });
 
     socket!.on('disconnect', (_) {
       _connectionStatusController.add(false);
-      print('❌ WebSocket disconnected');
+      if (kDebugMode) {
+        print('❌ WebSocket disconnected');
+      }
     });
 
     socket!.on('connect_error', (error) {
-      print('❌ WebSocket connection error: $error');
+      if (kDebugMode) {
+        print('❌ WebSocket connection error: $error');
+      }
     });
 
     // Dashboard events

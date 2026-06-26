@@ -2,6 +2,7 @@ import 'package:crm_kurchudashboard/core/services/api_client.dart';
 import 'package:crm_kurchudashboard/core/constants/api_constants.dart';
 import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/features/documents/data/models/document_model.dart';
+import 'package:flutter/foundation.dart';
 
 class DocumentService {
   ApiClient get _apiClient => getIt<ApiClient>();
@@ -23,7 +24,9 @@ class DocumentService {
       _cachedDocuments = rawDocs.map((e) => DocumentModel.fromJson(e)).toList();
       return _cachedDocuments!;
     } catch (e) {
-      print('Exception in getDocuments: $e');
+      if (kDebugMode) {
+        print('Exception in getDocuments: $e');
+      }
       return _cachedDocuments ?? [];
     }
   }
@@ -40,7 +43,9 @@ class DocumentService {
       }
       return newDoc;
     } catch (e) {
-      print('Exception in createDocument: $e');
+      if (kDebugMode) {
+        print('Exception in createDocument: $e');
+      }
       return null;
     }
   }
@@ -53,7 +58,9 @@ class DocumentService {
       }
       return true;
     } catch (e) {
-      print('Exception in deleteDocument: $e');
+      if (kDebugMode) {
+        print('Exception in deleteDocument: $e');
+      }
       return false;
     }
   }

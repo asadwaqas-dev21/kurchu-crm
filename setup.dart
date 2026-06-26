@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 void main() {
   final Map<String, String> files = {
     // core/constants
@@ -1599,6 +1601,8 @@ class KurchuCrmApp extends StatelessWidget {
     final file = File(entry.key);
     file.parent.createSync(recursive: true);
     file.writeAsStringSync(entry.value);
-    print('Created \${entry.key}');
+    if (kDebugMode) {
+      print('Created \${entry.key}');
+    }
   }
 }

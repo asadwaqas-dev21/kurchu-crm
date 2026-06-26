@@ -5,8 +5,6 @@ import 'package:crm_kurchudashboard/core/constants/app_colors.dart';
 import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/core/services/auth_service.dart';
 
-// ... class definitions keep unchanged, targeting lines 167-202 below ...
-
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
 

@@ -2,6 +2,7 @@ import 'package:crm_kurchudashboard/core/services/api_client.dart';
 import 'package:crm_kurchudashboard/core/constants/api_constants.dart';
 import 'package:crm_kurchudashboard/core/di/injection.dart';
 import 'package:crm_kurchudashboard/features/follow_ups/data/models/follow_up_model.dart';
+import 'package:flutter/foundation.dart';
 
 class FollowUpService {
   ApiClient get _apiClient => getIt<ApiClient>();
@@ -19,7 +20,9 @@ class FollowUpService {
       final List<dynamic> raw = response.data['data']['followUps'];
       return raw.map((e) => FollowUpModel.fromJson(e)).toList();
     } catch (e) {
-      print('Exception in getFollowUps: $e');
+      if (kDebugMode) {
+        print('Exception in getFollowUps: $e');
+      }
       return [];
     }
   }
@@ -33,12 +36,17 @@ class FollowUpService {
 
       return FollowUpModel.fromJson(response.data['data']['followUp']);
     } catch (e) {
-      print('Exception in createFollowUp: $e');
+      if (kDebugMode) {
+        print('Exception in createFollowUp: $e');
+      }
       return null;
     }
   }
 
-  Future<FollowUpModel?> updateFollowUp(String id, Map<String, dynamic> data) async {
+  Future<FollowUpModel?> updateFollowUp(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await _apiClient.put(
         '${ApiConstants.followUps}/$id',
@@ -47,7 +55,9 @@ class FollowUpService {
 
       return FollowUpModel.fromJson(response.data['data']['followUp']);
     } catch (e) {
-      print('Exception in updateFollowUp: $e');
+      if (kDebugMode) {
+        print('Exception in updateFollowUp: $e');
+      }
       return null;
     }
   }

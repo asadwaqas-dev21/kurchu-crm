@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:crm_kurchudashboard/core/services/api_client.dart';
 import 'package:crm_kurchudashboard/core/constants/api_constants.dart';
@@ -11,7 +12,7 @@ class AuthService {
 
   late Box<String> _tokenBox;
   late Box<dynamic> _userBox;
-  
+
   ApiClient get _apiClient => getIt<ApiClient>();
 
   Future<void> initialize() async {
@@ -24,10 +25,7 @@ class AuthService {
     try {
       final response = await _apiClient.post(
         ApiConstants.authLogin,
-        data: {
-          'email': email,
-          'password': password,
-        },
+        data: {'email': email, 'password': password},
       );
 
       final accessToken = response.data['data']['accessToken'] as String;
@@ -37,13 +35,15 @@ class AuthService {
       // Save tokens
       await _tokenBox.put(_accessTokenKey, accessToken);
       await _tokenBox.put(_refreshTokenKey, refreshToken);
-      
+
       // Save user
       await _userBox.put('user', user);
 
       return true;
     } catch (e) {
-      print('LOGIN EXCEPTION IN AUTHD: $e');
+      if (kDebugMode) {
+        print('LOGIN EXCEPTION IN AUTHD: $e');
+      }
       return false;
     }
   }
@@ -136,18 +136,16 @@ class AuthService {
     try {
       final response = await _apiClient.patch(
         ApiConstants.authUpdateProfile,
-        data: {
-          'firstName': firstName,
-          'lastName': lastName,
-          'phone': phone,
-        },
+        data: {'firstName': firstName, 'lastName': lastName, 'phone': phone},
       );
 
       final user = response.data['data']['user'] as Map<String, dynamic>;
       await _userBox.put('user', user);
       return true;
     } catch (e) {
-      print('UPDATE PROFILE EXCEPTION: $e');
+      if (kDebugMode) {
+        print('UPDATE PROFILE EXCEPTION: $e');
+      }
       return false;
     }
   }
@@ -158,7 +156,9 @@ class AuthService {
       final response = await _apiClient.get('/auth/notification-settings');
       return response.data['data'] as Map<String, dynamic>;
     } catch (e) {
-      print('GET NOTIFICATION SETTINGS EXCEPTION: $e');
+      if (kDebugMode) {
+        print('GET NOTIFICATION SETTINGS EXCEPTION: $e');
+      }
       return null;
     }
   }
@@ -166,13 +166,12 @@ class AuthService {
   // Update Notification Settings
   Future<bool> updateNotificationSettings(Map<String, dynamic> settings) async {
     try {
-      await _apiClient.put(
-        '/auth/notification-settings',
-        data: settings,
-      );
+      await _apiClient.put('/auth/notification-settings', data: settings);
       return true;
     } catch (e) {
-      print('UPDATE NOTIFICATION SETTINGS EXCEPTION: $e');
+      if (kDebugMode) {
+        print('UPDATE NOTIFICATION SETTINGS EXCEPTION: $e');
+      }
       return false;
     }
   }
